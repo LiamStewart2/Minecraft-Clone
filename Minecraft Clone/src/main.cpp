@@ -1,43 +1,8 @@
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
-#include <iostream>
+#include "Application.h"
 
 int main(void)
 {
-    GLFWwindow* window;
-
-    if (!glfwInit())
-        return -1;
-
-    window = glfwCreateWindow(1080, 720, "Minecraft Clone", NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        return -1;
-    }
-    glfwMakeContextCurrent(window);
-
-    if (glewInit() != GLEW_OK)
-        std::cout << "GLEW INIT ERROR" << std::endl;
-
-    std::cout << glGetString(GL_VERSION) << std::endl;
-
-    while (!glfwWindowShouldClose(window))
-    {
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        glBegin(GL_TRIANGLES);
-        glVertex2f(-0.5f, -0.5f);
-        glVertex2f(0.5f, -0.5f);
-        glVertex2f(0.0f, 0.5f);
-        glEnd();
-
-        glfwSwapBuffers(window);
-
-        glfwPollEvents();
-    }
-
-    glfwTerminate();
+    Application app = Application();
+    app.mainloop();
     return 0;
 }
