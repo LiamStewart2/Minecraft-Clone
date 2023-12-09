@@ -10,7 +10,7 @@ int main(void)
     if (!glfwInit())
         return -1;
 
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(1080, 720, "Minecraft Clone", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -19,7 +19,7 @@ int main(void)
     glfwMakeContextCurrent(window);
 
     if (glewInit() != GLEW_OK)
-        std::cout << "OOPS" << std::endl;
+        std::cout << "GLEW INIT ERROR" << std::endl;
 
     std::cout << glGetString(GL_VERSION) << std::endl;
 
