@@ -20,9 +20,9 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT);
 
         glBegin(GL_TRIANGLES);
-        glVertex2f(-0.5f, -0.5f);
-        glVertex2f(0.5f, -0.5f);
-        glVertex2f(0.0f, 0.5f);
+        glVertex2f(-0.2f, -0.6f);
+        glVertex2f(0.65f, -0.6f);
+        glVertex2f(0.4f, 0.1f);
         glEnd();
 
         glfwSwapBuffers(window);
