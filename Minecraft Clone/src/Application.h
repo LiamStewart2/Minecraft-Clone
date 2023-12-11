@@ -15,7 +15,7 @@ public:
 private:
 	GLFWwindow* window;
 
-	int windowWidth = 1080; int windowHeight = 720;
+	int windowWidth = 720; int windowHeight = 480;
 
 	void terminate();
 };
