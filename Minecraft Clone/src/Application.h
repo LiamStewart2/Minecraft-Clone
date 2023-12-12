@@ -15,12 +15,17 @@ public:
 private:
 	GLFWwindow* window;
 
-	int windowWidth = 720; int windowHeight = 480;
+	int windowWidth = 480; int windowHeight = 480;
 
-	float vertices[9] = {
-		-0.5f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		 0.0f,  0.5f, 0.0f
+	float vertices[12] = {
+	 0.5f,  0.5f, 0.0f,  
+	 0.5f, -0.5f, 0.0f,
+	-0.5f, -0.5f, 0.0f,
+	-0.5f,  0.5f, 0.0f   
+	};
+	unsigned int indices[6] = { 
+		0, 1, 3,
+		1, 2, 3 
 	};
 
 	const char* fragmentShaderSource = "#version 330 core\n"
@@ -39,6 +44,7 @@ private:
 	unsigned int shaderProgram;
 	unsigned int VBO; // vertx buffer object
 	unsigned int VAO; // vertex array object
+	unsigned int EBO;
 
 	void initTriangle();
 	void draw();
