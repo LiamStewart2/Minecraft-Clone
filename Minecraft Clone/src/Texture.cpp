@@ -15,7 +15,7 @@ Texture::Texture(const char* ImagePath)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	stbi_set_flip_vertically_on_load(true);
-	unsigned char* data = stbi_load("res/images/blocks/grass.jpg", &width, &height, &nrChannels, 0);
+	unsigned char* data = stbi_load(ImagePath, &width, &height, &nrChannels, 0);
 
 	if (data)
 	{

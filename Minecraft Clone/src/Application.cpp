@@ -130,6 +130,10 @@ void Application::draw()
 
 	for(int y = -2; y < 0; y++)
 	{
+		if (y == -1)
+			grassTexture.useTexture();
+		else
+			cobblestoneTexture.useTexture();
 		for (int i = -worldSize; i < worldSize + 1; i++)
 		{
 			for (int j = -worldSize; j < worldSize + 1; j++)
@@ -138,17 +142,6 @@ void Application::draw()
 				model = glm::translate(model, glm::vec3(i, y, j));
 				shader.setMat4("model", model);
 
-				if ((i + j) % 2 == 0)
-				{
-					// Use cobblestone texture for even coordinates
-					cobblestoneTexture.useTexture();
-				}
-				else
-				{
-					// Use grass texture for odd coordinates
-					grassTexture.useTexture();
-					
-				}
 				glDrawArrays(GL_TRIANGLES, 0, 36);
 				GLenum error = glGetError();
 				if (error != GL_NO_ERROR)
