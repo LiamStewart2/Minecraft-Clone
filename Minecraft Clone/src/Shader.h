@@ -8,6 +8,10 @@
 #include <sstream>
 #include <iostream>
 
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
+
 class Shader
 {
 public:
@@ -26,26 +30,8 @@ public:
 	void setBool(const std::string& name, bool value) const;
 	void setInt(const std::string& name, int value) const;
 	void setFloat(const std::string& name, float value) const;
+	void setMat4(const std::string& name, glm::mat4 value) const;
 private:
-	/*
-	const char* fragmentShaderSource = "#version 330 core\n"
-		"out vec4 FragColor;\n"
-		"in vec3 oColor;"
-		"void main()\n"
-		"{\n"
-		"   FragColor = vec4(oColor, 1.0f);\n"
-		"}\0";
-	const char* vertexShaderSource = "#version 330 core\n"
-		"layout (location = 0) in vec3 aPos;\n"
-		"layout (location = 1) in vec3 aColor;\n"
-		"out vec3 oColor;\n"
-		"void main()\n"
-		"{\n"
-		"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-		"   oColor = aColor;\n"
-		"}\0";
-	*/
-
 	// Debugging for the shaders initialization
 	void debugShaderiv(unsigned int shaderivID, const char* Location);
 	void debugProgramiv(unsigned int shaderProgramID);

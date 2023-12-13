@@ -1,5 +1,11 @@
 #include "Application.h"
 
+void Application::setFunctions(GLFWcursorposfun cursorFunction, GLFWscrollfun scrollFunction)
+{
+	glfwSetCursorPosCallback(window, cursorFunction);
+	glfwSetScrollCallback(window, scrollFunction);
+}
+
 Application::Application()
 {
 	if (!glfwInit())
@@ -21,11 +27,16 @@ Application::Application()
 		else
 		{
 			glfwMakeContextCurrent(window);
+
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 			if (glewInit() != GLEW_OK)
 				std::cout << "GLEW INIT ERROR" << std::endl;
 			else
 			{
 				std::cout << glGetString(GL_VERSION) << std::endl;
+
+				camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 				initTriangle();
 			}
@@ -41,6 +52,12 @@ void Application::mainloop()
 {
 	while (!glfwWindowShouldClose(window))
 	{
+		float currentFrame = static_cast<float>(glfwGetTime());
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
+		processInput(window);
+
 		draw();
 
 		glfwPollEvents();
@@ -69,29 +86,44 @@ void Application::initTriangle()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3* sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
+	glEnable(GL_DEPTH_TEST);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 void Application::draw()
 {
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	shader.useShader();
 	texture.useTexture();
 	glBindVertexArray(VAO);
 
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glm::mat4 projection;
+	projection = glm::perspective(glm::radians(45.0f), (float)(windowWidth / windowHeight), 0.1f, 100.0f);
+
+	glm::mat4 view = camera.GetViewMatrix();
+
+	shader.setMat4("view", view);
+	shader.setMat4("projection", projection);
+
+	for (unsigned int i = 0; i < 9; i++)
+	{
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, cubePositions[i]);
+		shader.setMat4("model", model);
+
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+	}
 
 	glfwSwapBuffers(window);
 }
@@ -104,4 +136,45 @@ void Application::terminate()
 	shader.terminateShader();
 
 	glfwTerminate();
+}
+
+void Application::processInput(GLFWwindow* window)
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		camera.ProcessKeyboard(FORWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		camera.ProcessKeyboard(BACKWARD, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		camera.ProcessKeyboard(LEFT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		camera.ProcessKeyboard(RIGHT, deltaTime);
+}
+
+void Application::mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
+{
+	float xpos = static_cast<float>(xposIn);
+	float ypos = static_cast<float>(yposIn);
+
+	if (firstMouse)
+	{
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+	lastX = xpos;
+	lastY = ypos;
+
+	camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+void Application::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
