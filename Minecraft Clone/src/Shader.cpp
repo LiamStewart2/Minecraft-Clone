@@ -5,8 +5,38 @@ Shader::Shader()
 	shaderID = -1;
 }
 
-Shader::Shader(const char* filepath)
+Shader::Shader(const char* vertexPath, const char* fragmentPath)
 {
+	/* LOAD SHADERS FROM FILE */
+	std::string vertexCode, fragmentCode;
+	std::ifstream vShaderFile, fShaderFile;
+
+	vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+
+	try
+	{
+		vShaderFile.open(vertexPath);
+		fShaderFile.open(fragmentPath);
+		std::stringstream vShaderStream, fShaderStream;
+
+		vShaderStream << vShaderFile.rdbuf();
+		fShaderStream << fShaderFile.rdbuf();
+
+		vShaderFile.close();
+		fShaderFile.close();
+
+		vertexCode = vShaderStream.str();
+		fragmentCode = fShaderStream.str();
+	}
+	catch (std::ifstream::failure e)
+	{
+		std::cout << "ERROR::SAHDER::FILE_NOT_SUCCESSFULLY_READ" << std::endl;
+	}
+
+	const char* vertexShaderSource = vertexCode.c_str();
+	const char* fragmentShaderSource = fragmentCode.c_str();
+
 	/* VERTEX SHADER LOADING */
 	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
@@ -34,6 +64,19 @@ Shader::Shader(const char* filepath)
 Shader::~Shader()
 {
 }
+
+
+void Shader::setBool(const std::string& name, bool value) const {
+	glUniform1i(glGetUniformLocation(shaderID, name.c_str()), (int)value);
+}
+void Shader::setInt(const std::string& name, int value) const {
+	glUniform1i(glGetUniformLocation(shaderID, name.c_str()), value);
+}
+void Shader::setFloat(const std::string& name, float value) const {
+	glUniform1f(glGetUniformLocation(shaderID, name.c_str()), value);
+}
+
+
 
 void Shader::debugShaderiv(unsigned int shaderivID, const char* Location)
 {

@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "Shader.h"
+#include "Texture.h"
 
 class Application
 {
@@ -19,11 +20,12 @@ private:
 
 	int windowWidth = 480; int windowHeight = 480;
 
-	float vertices[12] = {
-	 0.5f,  0.5f, 0.0f,  
-	 0.5f, -0.5f, 0.0f,
-	-0.5f, -0.5f, 0.0f,
-	-0.5f,  0.5f, 0.0f   
+	float vertices[32] = {
+		 //Positions		  //Colours			  // Texture
+		 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,
+		 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
+		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f
 	};
 	unsigned int indices[6] = { 
 		0, 1, 3,
@@ -31,6 +33,7 @@ private:
 	};
 
 	Shader shader;
+	Texture texture;
 
 	unsigned int VBO; // vertx buffer object
 	unsigned int VAO; // vertex array object
