@@ -31,7 +31,7 @@ public:
 private:
 	GLFWwindow* window;
 
-	int windowWidth = 720; int windowHeight = 720;
+	int windowWidth = 900; int windowHeight = 900;
 
     float vertices[180] = {
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -81,22 +81,13 @@ private:
 		1, 2, 3 
 	};
 
-    glm::vec3 cubePositions[9] = {
-        glm::vec3(-1.0f, -1.0f,  0.0f),
-        glm::vec3( 0.0f, -1.0f,  0.0f),
-        glm::vec3( 1.0f, -1.0f,  0.0f),
-        glm::vec3(-1.0f,  0.0f,  0.0f),
-        glm::vec3( 0.0f,  0.0f,  0.0f),
-        glm::vec3( 1.0f,  0.0f,  0.0f),
-        glm::vec3(-1.0f,  1.0f,  0.0f),
-        glm::vec3( 0.0f,  1.0f,  0.0f),
-        glm::vec3( 1.0f,  1.0f,  0.0f)
-    };
+    int worldSize = 10;
 
     Camera camera;
 
 	Shader shader;
-	Texture texture;
+	Texture grassTexture;
+    Texture cobblestoneTexture;
 
 	unsigned int VBO; // vertx buffer object
 	unsigned int VAO; // vertex array object
@@ -108,6 +99,8 @@ private:
 
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
+    int frameCount = 0;
+    double previousTime = glfwGetTime();
 
 	void initTriangle();
 	void draw();

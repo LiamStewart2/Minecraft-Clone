@@ -27,6 +27,7 @@ Application::Application()
 		else
 		{
 			glfwMakeContextCurrent(window);
+			glfwSwapInterval(0);
 
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -55,6 +56,14 @@ void Application::mainloop()
 		float currentFrame = static_cast<float>(glfwGetTime());
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
+		frameCount++;
+
+		if (currentFrame - previousTime >= 1.0f)
+		{
+			std::cout << frameCount << std::endl;
+			frameCount = 0;
+			previousTime = currentFrame;
+		}
 
 		processInput(window);
 
@@ -69,7 +78,10 @@ void Application::mainloop()
 void Application::initTriangle()
 {
 	shader = Shader("src/Shaders/DefaultShader/shader.vs","src/Shaders/DefaultShader/shader.fs");
-	texture = Texture("res/images/blocks/grass.jpg");
+
+	grassTexture = Texture("res/images/blocks/grass.jpg");
+	cobblestoneTexture = Texture("res/images/blocks/cobblestone.jpg");
+	
 
 	/* OPENGL */
 
@@ -105,24 +117,46 @@ void Application::draw()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	shader.useShader();
-	texture.useTexture();
 	glBindVertexArray(VAO);
 
 	glm::mat4 projection;
 	projection = glm::perspective(glm::radians(45.0f), (float)(windowWidth / windowHeight), 0.1f, 100.0f);
-
 	glm::mat4 view = camera.GetViewMatrix();
 
+	cobblestoneTexture.useTexture();
 	shader.setMat4("view", view);
 	shader.setMat4("projection", projection);
+	shader.setInt("ourTexture", 0);
 
-	for (unsigned int i = 0; i < 9; i++)
+	for(int y = -2; y < 0; y++)
 	{
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, cubePositions[i]);
-		shader.setMat4("model", model);
+		for (int i = -worldSize; i < worldSize + 1; i++)
+		{
+			for (int j = -worldSize; j < worldSize + 1; j++)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(i, y, j));
+				shader.setMat4("model", model);
 
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+				if ((i + j) % 2 == 0)
+				{
+					// Use cobblestone texture for even coordinates
+					cobblestoneTexture.useTexture();
+				}
+				else
+				{
+					// Use grass texture for odd coordinates
+					grassTexture.useTexture();
+					
+				}
+				glDrawArrays(GL_TRIANGLES, 0, 36);
+				GLenum error = glGetError();
+				if (error != GL_NO_ERROR)
+				{
+					std::cout << "OpenGL Error: " << error << std::endl;
+				}
+			}
+		}
 	}
 
 	glfwSwapBuffers(window);
@@ -166,7 +200,7 @@ void Application::mouse_callback(GLFWwindow* window, double xposIn, double yposI
 	}
 
 	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+	float yoffset = lastY - ypos; 
 
 	lastX = xpos;
 	lastY = ypos;

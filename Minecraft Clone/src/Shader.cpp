@@ -80,7 +80,6 @@ void Shader::setMat4(const std::string& name, glm::mat4 value) const {
 }
 
 
-
 void Shader::debugShaderiv(unsigned int shaderivID, const char* Location)
 {
 	int success;

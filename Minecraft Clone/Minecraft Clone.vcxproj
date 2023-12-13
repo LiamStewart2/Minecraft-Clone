@@ -152,6 +152,7 @@
     <None Include="src\Shaders\DefaultShader\shader.vs" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\images\blocks\cobblestone.jpg" />
     <Image Include="res\images\blocks\container.jpg" />
     <Image Include="res\images\blocks\grass.jpg" />
   </ItemGroup>
