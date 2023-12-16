@@ -30,6 +30,9 @@
     <ClCompile Include="src\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Block.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h">
@@ -44,19 +47,25 @@
     <ClInclude Include="src\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Shaders\DefaultShader\shader.fs" />
     <None Include="src\Shaders\DefaultShader\shader.vs" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\images\blocks\grass.jpg">
+    <Image Include="res\images\blocks\cobblestone.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\images\blocks\container.jpg">
+    <Image Include="res\images\blocks\grass_block_top.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="res\images\blocks\cobblestone.jpg">
+    <Image Include="res\images\blocks\grass_block_side.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

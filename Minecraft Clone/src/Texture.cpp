@@ -16,10 +16,17 @@ Texture::Texture(const char* ImagePath)
 
 	stbi_set_flip_vertically_on_load(true);
 	unsigned char* data = stbi_load(ImagePath, &width, &height, &nrChannels, 0);
+	std::cout << nrChannels << std::endl;
 
 	if (data)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		GLint channel = -1;
+		if (nrChannels == 3)
+			channel = GL_RGB;
+		else
+			channel = GL_RGBA;
+
+		glTexImage2D(GL_TEXTURE_2D, 0, channel, width, height, 0, channel, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else

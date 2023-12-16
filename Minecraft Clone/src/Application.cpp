@@ -79,9 +79,10 @@ void Application::initTriangle()
 {
 	shader = Shader("src/Shaders/DefaultShader/shader.vs","src/Shaders/DefaultShader/shader.fs");
 
-	grassTexture = Texture("res/images/blocks/grass.jpg");
-	cobblestoneTexture = Texture("res/images/blocks/cobblestone.jpg");
-	
+	color white = color();
+
+	bGrass = Block("res/images/blocks/grass_block_top.png", "res/images/blocks/grass_block_side.png", color(69, 255, 81), white, color(0.55, 0.27, 0.12));
+	bCobblestone = Block("res/images/blocks/cobblestone.png", "", white, white, white);
 
 	/* OPENGL */
 
@@ -93,9 +94,6 @@ void Application::initTriangle()
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
@@ -123,7 +121,6 @@ void Application::draw()
 	projection = glm::perspective(glm::radians(45.0f), (float)(windowWidth / windowHeight), 0.1f, 100.0f);
 	glm::mat4 view = camera.GetViewMatrix();
 
-	cobblestoneTexture.useTexture();
 	shader.setMat4("view", view);
 	shader.setMat4("projection", projection);
 	shader.setInt("ourTexture", 0);
@@ -131,9 +128,15 @@ void Application::draw()
 	for(int y = -2; y < 0; y++)
 	{
 		if (y == -1)
-			grassTexture.useTexture();
+		{
+			//grassTexture.useTexture();
+			//shader.setVec3("color", 0.2f, 0.6f, 0.25f);
+		}
 		else
-			cobblestoneTexture.useTexture();
+		{
+			//cobblestoneTexture.useTexture();
+			//shader.setVec3("color", 1, 1, 1);
+		}
 		for (int i = -worldSize; i < worldSize + 1; i++)
 		{
 			for (int j = -worldSize; j < worldSize + 1; j++)
@@ -142,12 +145,10 @@ void Application::draw()
 				model = glm::translate(model, glm::vec3(i, y, j));
 				shader.setMat4("model", model);
 
-				glDrawArrays(GL_TRIANGLES, 0, 36);
-				GLenum error = glGetError();
-				if (error != GL_NO_ERROR)
-				{
-					std::cout << "OpenGL Error: " << error << std::endl;
-				}
+				if (y == -1)
+					bGrass.draw(&shader);
+				else
+					bCobblestone.draw(&shader);
 			}
 		}
 	}
