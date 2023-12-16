@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include <vector>
 
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
@@ -25,9 +26,8 @@ public:
 
     void processInput(GLFWwindow* window);
     void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
-    void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
-    void setFunctions(GLFWcursorposfun cursorFunction, GLFWscrollfun scrollFunction);
+    void setFunctions(GLFWcursorposfun cursorFunction);
 private:
 	GLFWwindow* window;
 
@@ -83,17 +83,21 @@ private:
     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
 
-    int worldSize = 10;
+    std::vector<Block> Map;
+
+    int worldSize = 16;
+    int worldDepth = 64;
 
     Camera camera;
 
 	Shader shader;
-	Block bGrass;
-    Block bCobblestone;
+
+    Texture tGrassSide;
+    Texture tGrassTop;
+    Texture tCobblestone;
 
 	unsigned int VBO; // vertx buffer object
 	unsigned int VAO; // vertex array object
-	unsigned int EBO;
 
     bool firstMouse = true;
     float lastX = ((float)windowWidth) / 2;
@@ -105,7 +109,9 @@ private:
     double previousTime = glfwGetTime();
 
 	void initTriangle();
+    void initMap();
 	void draw();
+    void drawMap();
 	void terminate();
 };
 

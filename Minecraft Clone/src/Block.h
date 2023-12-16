@@ -1,4 +1,8 @@
 #pragma once
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
+
 #include "Texture.h"
 #include "Color.h"
 #include "Shader.h"
@@ -6,9 +10,11 @@
 class Block
 {
 public:
-	Block() {};
-	Block(const char* top_texture, const char* side_texture, color topColor, color sideColor, color bottomColor);
+	Block() { TopTexture = nullptr; SideTexture = nullptr; }
+	Block(Texture* sideTexture, Texture* topTexture, color topColor, color sideColor, color bottomColor, glm::vec3 position);
 	~Block();
+
+
 
 	void draw(Shader* shader);
 
@@ -16,7 +22,10 @@ public:
 	color SideColor;
 	color BottomColor;
 
-	Texture TopTexture;
-	Texture SideTexture;
-};
+	Texture* TopTexture;
+	Texture* SideTexture;
 
+	glm::mat4 model;
+
+	bool usesSameTexture = false;
+};

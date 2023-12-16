@@ -18,7 +18,7 @@ const float YAW = -90.0f;
 const float PITCH = 0.0f;
 const float SPEED = 2.5f;
 const float SENSITIVITY = 0.1f;
-const float ZOOM = 0.001f;
+const float ZOOM = 80 ;
 
 class Camera
 {
@@ -80,7 +80,6 @@ public:
         // update Front, Right and Up Vectors using the updated Euler angles
         updateCameraVectors();
     }
-    void ProcessMouseScroll(float yoffset);
 
 private:
     void updateCameraVectors();

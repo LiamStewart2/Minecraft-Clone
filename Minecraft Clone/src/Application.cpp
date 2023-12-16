@@ -1,9 +1,8 @@
 #include "Application.h"
 
-void Application::setFunctions(GLFWcursorposfun cursorFunction, GLFWscrollfun scrollFunction)
+void Application::setFunctions(GLFWcursorposfun cursorFunction)
 {
 	glfwSetCursorPosCallback(window, cursorFunction);
-	glfwSetScrollCallback(window, scrollFunction);
 }
 
 Application::Application()
@@ -40,6 +39,7 @@ Application::Application()
 				camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 				initTriangle();
+				initMap();
 			}
 		}
 	}
@@ -79,16 +79,15 @@ void Application::initTriangle()
 {
 	shader = Shader("src/Shaders/DefaultShader/shader.vs","src/Shaders/DefaultShader/shader.fs");
 
+	tGrassSide = Texture("res/images/blocks/grass_block_side.png");
+	tGrassTop = Texture("res/images/blocks/grass_block_top.png");
+	tCobblestone = Texture("res/images/blocks/cobblestone.png");
+
 	color white = color();
-
-	bGrass = Block("res/images/blocks/grass_block_top.png", "res/images/blocks/grass_block_side.png", color(69, 255, 81), white, color(0.55, 0.27, 0.12));
-	bCobblestone = Block("res/images/blocks/cobblestone.png", "", white, white, white);
-
 	/* OPENGL */
 
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
 
 	glBindVertexArray(VAO);
 
@@ -109,6 +108,26 @@ void Application::initTriangle()
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
+void Application::initMap()
+{
+
+	color white = color();
+	Map = std::vector<Block>();
+	for (int y = -worldDepth; y < 0; y++)
+	{
+		for (int x = -worldSize / 2; x++; x <= worldSize)
+		{
+			for (int z =- worldSize / 2; z++; z <= worldSize)
+			{
+				if (y == -1)
+					Map.push_back(Block(&tGrassSide, &tGrassTop, color(69, 255, 81), white, color(156, 63, 37), glm::vec3(x, y, z)));
+				else
+					Map.push_back(Block(&tCobblestone, nullptr, white, white, white, glm::vec3(x, y, z)));
+			}
+		}
+	}
+}
+
 void Application::draw()
 {
 	glClearColor(0.2f, 0.94f, 0.9f, 1.0f);
@@ -118,49 +137,29 @@ void Application::draw()
 	glBindVertexArray(VAO);
 
 	glm::mat4 projection;
-	projection = glm::perspective(glm::radians(45.0f), (float)(windowWidth / windowHeight), 0.1f, 100.0f);
+	projection = glm::perspective(glm::radians(camera.Zoom), (float)(windowWidth / windowHeight), 0.1f, 100.0f);
 	glm::mat4 view = camera.GetViewMatrix();
 
 	shader.setMat4("view", view);
 	shader.setMat4("projection", projection);
-	shader.setInt("ourTexture", 0);
 
-	for(int y = -2; y < 0; y++)
-	{
-		if (y == -1)
-		{
-			//grassTexture.useTexture();
-			//shader.setVec3("color", 0.2f, 0.6f, 0.25f);
-		}
-		else
-		{
-			//cobblestoneTexture.useTexture();
-			//shader.setVec3("color", 1, 1, 1);
-		}
-		for (int i = -worldSize; i < worldSize + 1; i++)
-		{
-			for (int j = -worldSize; j < worldSize + 1; j++)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(i, y, j));
-				shader.setMat4("model", model);
-
-				if (y == -1)
-					bGrass.draw(&shader);
-				else
-					bCobblestone.draw(&shader);
-			}
-		}
-	}
+	drawMap();
 
 	glfwSwapBuffers(window);
+}
+
+void Application::drawMap()
+{
+	for (int i = 0; i < Map.size(); i++)
+	{
+		Map[i].draw(&shader);
+	}
 }
 
 void Application::terminate()
 {
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
 	shader.terminateShader();
 
 	glfwTerminate();
@@ -200,9 +199,4 @@ void Application::mouse_callback(GLFWwindow* window, double xposIn, double yposI
 	lastY = ypos;
 
 	camera.ProcessMouseMovement(xoffset, yoffset);
-}
-
-void Application::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
-	camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
