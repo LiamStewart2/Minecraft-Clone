@@ -1,19 +1,11 @@
 #include "Block.h"
 
-Block::Block(Texture* sideTexture, Texture* topTexture, color topColor, color sideColor, color bottomColor, glm::vec3 position)
+Block::Block(BlockType* blocksType, glm::vec3 position)
 {
-	TopTexture = topTexture;
-	SideTexture = sideTexture;
-
-	if (topTexture == nullptr)
-	{
-		usesSameTexture = true;
-	}
+	info = blocksType;
 
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, position);
-
-	TopColor = topColor; SideColor = sideColor; BottomColor = bottomColor;
 }
 
 Block::~Block()
@@ -23,26 +15,28 @@ Block::~Block()
 void Block::draw(Shader* shader)
 {
 	shader->setMat4("model", model);
-	if (usesSameTexture)
+	if (info->usesSameTexture)
 	{
-		SideTexture->useTexture();
-		shader->setVec3("color", SideColor.r, SideColor.g, SideColor.b);
+		info->SideTexture->useTexture();
+		shader->setVec3("color", info->SideColor.r, info->SideColor.g, info->SideColor.b);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 	}
 	else 
 	{
-		SideTexture->useTexture();
-		shader->setVec3("color", SideColor.r, SideColor.g, SideColor.b);
+		info->SideTexture->useTexture();
+		shader->setVec3("color", info->SideColor.r, info->SideColor.g, info->SideColor.b);
 		glDrawArrays(GL_TRIANGLES, 0, 24);
 
-		TopTexture->useTexture();
+		info->TopTexture->useTexture();
 
 		//Bottom Face
-		shader->setVec3("color", BottomColor.r, BottomColor.g, BottomColor.b);
+		if(info->usesSameColor != true)
+			shader->setVec3("color", info->BottomColor.r, info->BottomColor.g, info->BottomColor.b);
 		glDrawArrays(GL_TRIANGLES, 24, 6);
 
 		//Top Face
-		shader->setVec3("color", TopColor.r, TopColor.g, TopColor.b);
+		if(info->usesSameColor != true)
+			shader->setVec3("color", info->TopColor.r, info->TopColor.g, info->TopColor.b);
 		glDrawArrays(GL_TRIANGLES, 30, 6);
 	}
 }

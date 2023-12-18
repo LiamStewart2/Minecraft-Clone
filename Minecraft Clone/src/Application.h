@@ -14,7 +14,7 @@
 #include "Block.h"
 #include "Camera.h"
 
-
+#include "BlockType.h"
 
 class Application
 {
@@ -89,6 +89,9 @@ private:
     int worldDepth = 64;
 
     Camera camera;
+
+    BlockType bGrass;
+    BlockType bCobblestone;
 
 	Shader shader;
 

@@ -82,8 +82,9 @@ void Application::initTriangle()
 	tGrassSide = Texture("res/images/blocks/grass_block_side.png");
 	tGrassTop = Texture("res/images/blocks/grass_block_top.png");
 	tCobblestone = Texture("res/images/blocks/cobblestone.png");
-
-	color white = color();
+	
+	bGrass = BlockType(&tGrassSide, &tGrassTop, color(69, 255, 81), color(), color(156, 63, 37));
+	bCobblestone = BlockType(&tCobblestone);
 	/* OPENGL */
 
 	glGenVertexArrays(1, &VAO);
@@ -120,9 +121,9 @@ void Application::initMap()
 			for (int z =- worldSize / 2; z++; z <= worldSize)
 			{
 				if (y == -1)
-					Map.push_back(Block(&tGrassSide, &tGrassTop, color(69, 255, 81), white, color(156, 63, 37), glm::vec3(x, y, z)));
+					Map.push_back(Block(&bGrass, glm::vec3(x, y, z)));
 				else
-					Map.push_back(Block(&tCobblestone, nullptr, white, white, white, glm::vec3(x, y, z)));
+					Map.push_back(Block(&bCobblestone, glm::vec3(x, y, z)));
 			}
 		}
 	}

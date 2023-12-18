@@ -3,6 +3,7 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 
+#include "BlockType.h"
 #include "Texture.h"
 #include "Color.h"
 #include "Shader.h"
@@ -10,22 +11,13 @@
 class Block
 {
 public:
-	Block() { TopTexture = nullptr; SideTexture = nullptr; }
-	Block(Texture* sideTexture, Texture* topTexture, color topColor, color sideColor, color bottomColor, glm::vec3 position);
+	Block() { info = nullptr; }
+	Block(BlockType* blocksType, glm::vec3 position);
 	~Block();
-
-
 
 	void draw(Shader* shader);
 
-	color TopColor;
-	color SideColor;
-	color BottomColor;
-
-	Texture* TopTexture;
-	Texture* SideTexture;
+	BlockType* info;
 
 	glm::mat4 model;
-
-	bool usesSameTexture = false;
 };
