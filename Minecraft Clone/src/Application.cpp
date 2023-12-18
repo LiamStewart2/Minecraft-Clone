@@ -118,12 +118,22 @@ void Application::initMap()
 	{
 		for (int x = -worldSize / 2; x++; x <= worldSize)
 		{
-			for (int z =- worldSize / 2; z++; z <= worldSize)
+			for (int z = -worldSize / 2; z++; z <= worldSize)
 			{
 				if (y == -1)
+				{
 					Map.push_back(Block(&bGrass, glm::vec3(x, y, z)));
+				}
 				else
 					Map.push_back(Block(&bCobblestone, glm::vec3(x, y, z)));
+
+				Block* lastBlock = &(Map.back());
+				lastBlock->updateFace(TOP_SIDE,     y == -1);
+				lastBlock->updateFace(BOTTOM_SIDE,  y == -worldDepth);
+				lastBlock->updateFace(LEFT_SIDE,    x == (-worldSize / 2) + 1);
+				lastBlock->updateFace(BACK_SIDE,    z == (-worldSize / 2) + 1);
+				lastBlock->updateFace(RIGHT_SIDE,   x ==  0);
+				lastBlock->updateFace(FRONT_SIDE,   z ==  0);
 			}
 		}
 	}
