@@ -15,6 +15,8 @@
 #include "Camera.h"
 
 #include "BlockType.h"
+#include "Chunk.h"
+#include "BlockDatabase.h"
 
 class Application
 {
@@ -33,6 +35,7 @@ private:
 
 	int windowWidth = 1000; int windowHeight = 1000;
 
+    //Cube vertices
     float vertices[180] = {
         //Back Face
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -83,21 +86,14 @@ private:
     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
 
-    std::vector<Block> Map;
+    std::vector<Chunk> ChunkMap;
 
-    int worldSize = 16;
-    int worldDepth = 32;
+    int worldSize = 8;
 
     Camera camera;
-
-    BlockType bGrass;
-    BlockType bCobblestone;
-
 	Shader shader;
 
-    Texture tGrassSide;
-    Texture tGrassTop;
-    Texture tCobblestone;
+    BlockDatabase blockData;
 
 	unsigned int VBO; // vertx buffer object
 	unsigned int VAO; // vertex array object

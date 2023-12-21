@@ -21,5 +21,6 @@ public:
 
 	bool usesSameColor = false;
 	bool usesSameTexture = false;
+	bool isAir = false;
 };
 

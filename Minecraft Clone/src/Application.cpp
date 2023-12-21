@@ -37,7 +37,7 @@ Application::Application()
 			{
 				std::cout << glGetString(GL_VERSION) << std::endl;
 
-				camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+				camera = Camera(glm::vec3(8.0f, 18.0f, 8.0f));
 
 				initTriangle();
 				initMap();
@@ -79,13 +79,6 @@ void Application::mainloop()
 void Application::initTriangle()
 {
 	shader = Shader("src/Shaders/DefaultShader/shader.vs","src/Shaders/DefaultShader/shader.fs");
-
-	tGrassSide = Texture("res/images/blocks/grass_block_side.png");
-	tGrassTop = Texture("res/images/blocks/grass_block_top.png");
-	tCobblestone = Texture("res/images/blocks/cobblestone.png");
-	
-	bGrass = BlockType(&tGrassSide, &tGrassTop, color(69, 255, 81), color(), color(156, 63, 37));
-	bCobblestone = BlockType(&tCobblestone);
 	/* OPENGL */
 
 	glGenVertexArrays(1, &VAO);
@@ -108,40 +101,17 @@ void Application::initTriangle()
 	glEnable(GL_DEPTH_TEST);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	blockData = BlockDatabase();
+	blockData.initDatabase();
 }
 
 void Application::initMap()
 {
-	//const siv::PerlinNoise::seed_type seed = 123456u;
-	//const siv::PerlinNoise perlin{ seed };
-
-
-	color white = color();
-	Map = std::vector<Block>();
-	for (int y = -worldDepth; y < 0; y++)
+	for (int i = -worldSize / 2; i++; i < worldSize / 2 - 1)
 	{
-		for (int x = -worldSize / 2; x++; x <= worldSize / 2)
+		for (int j = -worldSize / 2; j++; j < worldSize / 2 - 1)
 		{
-			for (int z = -worldSize / 2; z++; z <= worldSize / 2)
-			{
-				//const double noise = perlin.octave2D_01((x * 0.01), (y * 0.01), 4);
-				//std::cout << noise << "\t";
-				if (y == -1)
-				{
-					Map.push_back(Block(&bGrass, glm::vec3(x, y, z)));
-				}
-				else
-					Map.push_back(Block(&bCobblestone, glm::vec3(x, y, z)));
-
-				Block* lastBlock = &(Map.back());
-				lastBlock->updateFace(TOP_SIDE,     y == -1);
-				lastBlock->updateFace(BOTTOM_SIDE,  y == -worldDepth);
-				lastBlock->updateFace(LEFT_SIDE,    x == (-worldSize / 2) + 1);
-				lastBlock->updateFace(BACK_SIDE,    z == (-worldSize / 2) + 1);
-				lastBlock->updateFace(RIGHT_SIDE,   x ==  0);
-				lastBlock->updateFace(FRONT_SIDE,   z ==  0);
-			}
-			std::cout << '\n';
+			ChunkMap.push_back(Chunk(i, j, &blockData));
 		}
 	}
 }
@@ -168,9 +138,9 @@ void Application::draw()
 
 void Application::drawMap()
 {
-	for (int i = 0; i < Map.size(); i++)
+	for (int i = 0; i < ChunkMap.size(); i++)
 	{
-		Map[i].draw(&shader);
+		ChunkMap[i].drawChunk(&shader);
 	}
 }
 
