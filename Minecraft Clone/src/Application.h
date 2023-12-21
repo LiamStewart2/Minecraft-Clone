@@ -86,7 +86,7 @@ private:
     std::vector<Block> Map;
 
     int worldSize = 16;
-    int worldDepth = 64;
+    int worldDepth = 32;
 
     Camera camera;
 

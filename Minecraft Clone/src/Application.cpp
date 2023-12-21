@@ -1,5 +1,6 @@
 #include "Application.h"
 
+
 void Application::setFunctions(GLFWcursorposfun cursorFunction)
 {
 	glfwSetCursorPosCallback(window, cursorFunction);
@@ -111,15 +112,20 @@ void Application::initTriangle()
 
 void Application::initMap()
 {
+	//const siv::PerlinNoise::seed_type seed = 123456u;
+	//const siv::PerlinNoise perlin{ seed };
+
 
 	color white = color();
 	Map = std::vector<Block>();
 	for (int y = -worldDepth; y < 0; y++)
 	{
-		for (int x = -worldSize / 2; x++; x <= worldSize)
+		for (int x = -worldSize / 2; x++; x <= worldSize / 2)
 		{
-			for (int z = -worldSize / 2; z++; z <= worldSize)
+			for (int z = -worldSize / 2; z++; z <= worldSize / 2)
 			{
+				//const double noise = perlin.octave2D_01((x * 0.01), (y * 0.01), 4);
+				//std::cout << noise << "\t";
 				if (y == -1)
 				{
 					Map.push_back(Block(&bGrass, glm::vec3(x, y, z)));
@@ -135,6 +141,7 @@ void Application::initMap()
 				lastBlock->updateFace(RIGHT_SIDE,   x ==  0);
 				lastBlock->updateFace(FRONT_SIDE,   z ==  0);
 			}
+			std::cout << '\n';
 		}
 	}
 }
