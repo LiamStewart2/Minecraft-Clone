@@ -88,7 +88,7 @@ private:
 
     std::vector<Chunk> ChunkMap;
 
-    int worldSize = 8;
+    int worldSize = 4;
 
     Camera camera;
 	Shader shader;

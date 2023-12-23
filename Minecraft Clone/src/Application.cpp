@@ -61,7 +61,8 @@ void Application::mainloop()
 
 		if (currentFrame - previousTime >= 1.0f)
 		{
-			std::cout << frameCount << std::endl;
+			std::cout << camera.Position.x / CHUNK_WIDTH << ":" << camera.Position.z / CHUNK_DEPTH << "\n";
+			//std::cout << frameCount << std::endl;
 			frameCount = 0;
 			previousTime = currentFrame;
 		}
@@ -107,11 +108,36 @@ void Application::initTriangle()
 
 void Application::initMap()
 {
-	for (int i = -worldSize / 2; i++; i < worldSize / 2 - 1)
+	for (int x = 0; x < worldSize; x++)
 	{
-		for (int j = -worldSize / 2; j++; j < worldSize / 2 - 1)
+		for (int y = 0; y < worldSize; y++)
 		{
-			ChunkMap.push_back(Chunk(i, j, &blockData));
+			ChunkMap.emplace_back(Chunk(x, y, &blockData));
+			std::cout << x << ":" << y << "; \n";
+			if (x > 0)
+			{
+				ChunkMap[0].updateEdgeCases(&ChunkMap[1], LEFT_SIDE);
+			}
+		}
+	}
+
+	for (int x = 0; x < worldSize; x++)
+	{
+		for (int y = 0; y < worldSize; y++)
+		{
+			int index = x + (y * worldSize);
+			if (x > 0) {
+				ChunkMap[index].updateEdgeCases(&ChunkMap[x - 1 + (y * worldSize)], RIGHT_SIDE);
+			}
+			if (y > 0){
+				ChunkMap[index].updateEdgeCases(&ChunkMap[x + ((y - 1) * worldSize)], FRONT_SIDE);
+			}
+			if (x < worldSize - 1) {
+				ChunkMap[index].updateEdgeCases(&ChunkMap[x + 1 + (y * worldSize)], LEFT_SIDE);
+			}
+			if (y > worldSize - 1) {
+				ChunkMap[index].updateEdgeCases(&ChunkMap[x + ((y + 1) * worldSize)], BACK_SIDE);
+			}
 		}
 	}
 }
@@ -130,6 +156,8 @@ void Application::draw()
 
 	shader.setMat4("view", view);
 	shader.setMat4("projection", projection);
+
+	
 
 	drawMap();
 
