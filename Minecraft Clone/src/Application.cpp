@@ -37,7 +37,7 @@ Application::Application()
 			{
 				std::cout << glGetString(GL_VERSION) << std::endl;
 
-				camera = Camera(glm::vec3(8.0f, 18.0f, 8.0f));
+				camera = Camera(glm::vec3(8.0f, 22.0f, 8.0f));
 
 				initTriangle();
 				initMap();
@@ -61,7 +61,7 @@ void Application::mainloop()
 
 		if (currentFrame - previousTime >= 1.0f)
 		{
-			std::cout << camera.Position.x / CHUNK_WIDTH << ":" << camera.Position.z / CHUNK_DEPTH << "\n";
+			std::cout << camera.Position.x / 16 << ":" << camera.Position.z / 16 << "\n";
 			//std::cout << frameCount << std::endl;
 			frameCount = 0;
 			previousTime = currentFrame;
@@ -112,31 +112,35 @@ void Application::initMap()
 	{
 		for (int y = 0; y < worldSize; y++)
 		{
-			ChunkMap.emplace_back(Chunk(x, y, &blockData));
-			std::cout << x << ":" << y << "; \n";
-			if (x > 0)
-			{
-				ChunkMap[0].updateEdgeCases(&ChunkMap[1], LEFT_SIDE);
-			}
+			ChunkMap.push_back(Chunk(x, y, &blockData));
 		}
 	}
 
-	for (int x = 0; x < worldSize; x++)
+	std::cout << worldSize << ":" << ChunkMap.size() << '\n';
+	if (true)
 	{
 		for (int y = 0; y < worldSize; y++)
 		{
-			int index = x + (y * worldSize);
-			if (x > 0) {
-				ChunkMap[index].updateEdgeCases(&ChunkMap[x - 1 + (y * worldSize)], RIGHT_SIDE);
-			}
-			if (y > 0){
-				ChunkMap[index].updateEdgeCases(&ChunkMap[x + ((y - 1) * worldSize)], FRONT_SIDE);
-			}
-			if (x < worldSize - 1) {
-				ChunkMap[index].updateEdgeCases(&ChunkMap[x + 1 + (y * worldSize)], LEFT_SIDE);
-			}
-			if (y > worldSize - 1) {
-				ChunkMap[index].updateEdgeCases(&ChunkMap[x + ((y + 1) * worldSize)], BACK_SIDE);
+			for (int x = 0; x < worldSize; x++)
+			{
+				int index = x + (y * worldSize);
+				std::cout << index << '\n';
+
+				if (y < worldSize - 1) {
+					ChunkMap[index].updateEdgeCases(&ChunkMap[index + worldSize], RIGHT_SIDE);
+				}
+				if (x < worldSize - 1) {
+					ChunkMap[index].updateEdgeCases(&ChunkMap[index + 1], BACK_SIDE);
+				}
+
+				if (y > 0 && false)
+				{
+					ChunkMap[index].updateEdgeCases(&ChunkMap[index - worldSize], FRONT_SIDE);
+				}
+				if (x > 0 && false)
+				{
+					ChunkMap[index].updateEdgeCases(&ChunkMap[index - 1], LEFT_SIDE);
+				}
 			}
 		}
 	}
