@@ -29,12 +29,12 @@ void Chunk::initChunk(int chunk_x, int chunk_y)
 		for (int z = 0; z < CHUNK_DEPTH; z++)
 		{
 			//int GrassHeight = CHUNK_HEIGHT / 2;
-			int GrassHeight = (CHUNK_HEIGHT / 2) + std::max(
+			int GrassHeight =(int)floor((CHUNK_HEIGHT / 2) +
 
-				(sin((((x + (chunk_x * CHUNK_WIDTH))) * CHUNK_WIDTH) * PI / 180)),
-				(sin((((z + (chunk_y * CHUNK_WIDTH))) * CHUNK_WIDTH) * PI / 180)))
+				(sin((((x + (chunk_x * CHUNK_WIDTH))) * CHUNK_WIDTH) * PI / 180)) *
+				(sin((((z + (chunk_y * CHUNK_WIDTH))) * CHUNK_WIDTH) * PI / 180))
 
-				* 10;
+				* 10);
 			for (int y = 0; y < GrassHeight; y++)
 			{
 				int index = get1DIndex(x, y, z);
@@ -126,12 +126,12 @@ void Chunk::updateEdgeCases(Chunk* otherChunk)
 		}
 	}
 	//CHECK X AXIS // DECREASE IN Z AXIS
-	else if (getBlock(0, 0, 0)->position.z < otherChunk->getBlock(0, 0, 0)->position.z)
+	else if (getBlock(0, 0, 0)->position.z > otherChunk->getBlock(0, 0, 0)->position.z)
 	{
 		for (int x = 0; x < CHUNK_WIDTH; x++)
 		{
 			for (int y = 0; y < CHUNK_HEIGHT; y++)
-				getBlock(x, y, 0)->updateFace(BACK_SIDE, otherChunk->getBlock(x, y, CHUNK_DEPTH - 1)->info->isAir);
+				getBlock(x, y, 0)->updateFace(FRONT_SIDE, otherChunk->getBlock(x, y, CHUNK_DEPTH - 1)->info->isAir);
 		}
 	}
 }
