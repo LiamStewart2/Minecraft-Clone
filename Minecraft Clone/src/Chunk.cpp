@@ -104,34 +104,45 @@ Block* Chunk::getBlock(int x, int y, int z)
 	return chunkMap[get1DIndex(x, y, z)];
 }
 
-void Chunk::updateEdgeCases(Chunk* otherChunk, Face Side)
+void Chunk::updateEdgeCases(Chunk* otherChunk)
 {
-	switch (Side) {
-	case LEFT_SIDE:
-		for(int z = 0; z < CHUNK_DEPTH; z++)
+	//CHECK Z AXIS // INCREASE IN X AXIS
+	if (getBlock(0, 0, 0)->position.x < otherChunk->getBlock(0, 0, 0)->position.x)
+	{
+		for (int z = 0; z < CHUNK_DEPTH; z++)
 		{
 			for (int y = 0; y < CHUNK_HEIGHT; y++)
-			{
-				chunkMap[get1DIndex(0, y, z)]->updateFace(LEFT_SIDE, otherChunk->getBlock(CHUNK_WIDTH - 1, y, z)->info->isAir);
-			}
+				getBlock(CHUNK_WIDTH - 1, y, z)->updateFace(RIGHT_SIDE, otherChunk->getBlock(0, y, z)->info->isAir);
 		}
-	case RIGHT_SIDE:
+	}
+
+	//CHECK Z AXIS // DECREASE IN X AXIS
+	if (getBlock(0, 0, 0)->position.x > otherChunk->getBlock(0, 0, 0)->position.x)
+	{
+		for (int z = 0; z < CHUNK_DEPTH; z++)
+		{
+			for (int y = 0; y < CHUNK_HEIGHT; y++)
+				getBlock(0, y, z)->updateFace(LEFT_SIDE, otherChunk->getBlock(CHUNK_WIDTH - 1, y, z)->info->isAir);
+		}
+	}
+
+
+	//CHECK X AXIS // INCREASE IN Z AXIS
+	else if (getBlock(0, 0, 0)->position.z < otherChunk->getBlock(0, 0, 0)->position.z)
+	{
 		for (int x = 0; x < CHUNK_WIDTH; x++)
 		{
 			for (int y = 0; y < CHUNK_HEIGHT; y++)
-				chunkMap[get1DIndex(x, y, CHUNK_DEPTH - 1)]->updateFace(BACK_SIDE, otherChunk->getBlock(x, y, 0)->info->isAir);
+				getBlock(x, y, CHUNK_DEPTH - 1)->updateFace(BACK_SIDE, otherChunk->getBlock(x, y, 0)->info->isAir);
 		}
-	case BACK_SIDE:
-		for (int x = 0; x < CHUNK_DEPTH; x++)
-		{
-			for (int y = 0; y < CHUNK_HEIGHT; y++)
-				chunkMap[get1DIndex(x, y, CHUNK_DEPTH - 1)]->updateFace(BACK_SIDE, otherChunk->getBlock(x, y, 0)->info->isAir);
-		}
-	case FRONT_SIDE:
+	}
+	//CHECK X AXIS // DECREASE IN Z AXIS
+	else if (getBlock(0, 0, 0)->position.z < otherChunk->getBlock(0, 0, 0)->position.z)
+	{
 		for (int x = 0; x < CHUNK_WIDTH; x++)
 		{
 			for (int y = 0; y < CHUNK_HEIGHT; y++)
-				chunkMap[get1DIndex(x, y, 0)]->updateFace(FRONT_SIDE, otherChunk->getBlock(x, y, CHUNK_DEPTH - 1)->info->isAir);
+				getBlock(x, y, 0)->updateFace(BACK_SIDE, otherChunk->getBlock(x, y, CHUNK_DEPTH - 1)->info->isAir);
 		}
 	}
 }

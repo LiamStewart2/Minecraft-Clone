@@ -1,11 +1,13 @@
 #include "Block.h"
 
-Block::Block(BlockType* blocksType, glm::vec3 position)
+Block::Block(BlockType* blocksType, glm::vec3 Position)
 {
 	info = blocksType;
 
 	model = glm::mat4(1.0f);
-	model = glm::translate(model, position);
+	model = glm::translate(model, Position);
+
+	position = Position;
 }
 
 void Block::updateFace(Face face, bool state)

@@ -16,7 +16,7 @@ class Block
 {
 public:
 	Block() { info = nullptr; model = glm::mat4(1.0f); }
-	Block(BlockType* blocksType, glm::vec3 position);
+	Block(BlockType* blocksType, glm::vec3 Position);
 	~Block();
 
 	void updateFace(Face face, bool state);
@@ -27,7 +27,8 @@ public:
 	bool anyFaces = false;
 	bool showFaces[6] = {false, false, false, false, false, false};
 
-	glm::mat4 model;
+	glm::vec3 position;
 private:
+	glm::mat4 model;
 	void checkIfAnyFacesVisible();
 };

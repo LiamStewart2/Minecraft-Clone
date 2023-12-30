@@ -61,7 +61,7 @@ void Application::mainloop()
 
 		if (currentFrame - previousTime >= 1.0f)
 		{
-			std::cout << camera.Position.x / 16 << ":" << camera.Position.z / 16 << "\n";
+			//std::cout << camera.Position.x / 16 << ":" << camera.Position.z / 16 << "\n";
 			//std::cout << frameCount << std::endl;
 			frameCount = 0;
 			previousTime = currentFrame;
@@ -126,20 +126,26 @@ void Application::initMap()
 				int index = x + (y * worldSize);
 				std::cout << index << '\n';
 
-				if (y < worldSize - 1) {
-					ChunkMap[index].updateEdgeCases(&ChunkMap[index + worldSize], RIGHT_SIDE);
+				if (x < worldSize - 1)
+				{
+					std::cout  << x << ":" << y << " +x update\n";
+					ChunkMap[index].updateEdgeCases(&ChunkMap[index + 1]);
 				}
-				if (x < worldSize - 1) {
-					ChunkMap[index].updateEdgeCases(&ChunkMap[index + 1], BACK_SIDE);
+				if(x > 0)
+				{
+					std::cout << x << ":" << y << " -x update\n";
+					ChunkMap[index].updateEdgeCases(&ChunkMap[index - 1]);
 				}
 
-				if (y > 0 && false)
+				if (y < worldSize - 1)
 				{
-					ChunkMap[index].updateEdgeCases(&ChunkMap[index - worldSize], FRONT_SIDE);
+					std::cout << x << ":" << y << " +y update\n";
+					ChunkMap[index].updateEdgeCases(&ChunkMap[index + worldSize]);
 				}
-				if (x > 0 && false)
+				if (y > 0)
 				{
-					ChunkMap[index].updateEdgeCases(&ChunkMap[index - 1], LEFT_SIDE);
+					std::cout << x << ":" << y << " -y update\n";
+					ChunkMap[index].updateEdgeCases(&ChunkMap[index - worldSize]);
 				}
 			}
 		}

@@ -14,7 +14,8 @@ public:
 	Chunk();
 	Chunk(int x_pos, int y_pos, BlockDatabase* bdata);
 	void drawChunk(Shader* shader);
-	void updateEdgeCases(Chunk* otherChunk, Face Side);
+	void updateEdgeCases(Chunk* otherChunk);
+
 
 	Block* getBlock(int x, int y, int z);
 private:
