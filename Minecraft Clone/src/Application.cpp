@@ -62,7 +62,7 @@ void Application::mainloop()
 		if (currentFrame - previousTime >= 1.0f)
 		{
 			//std::cout << camera.Position.x / 16 << ":" << camera.Position.z / 16 << "\n";
-			//std::cout << frameCount << std::endl;
+			std::cout << frameCount << std::endl;
 			frameCount = 0;
 			previousTime = currentFrame;
 		}
@@ -124,27 +124,22 @@ void Application::initMap()
 			for (int x = 0; x < worldSize; x++)
 			{
 				int index = x + (y * worldSize);
-				std::cout << index << '\n';
 
 				if (x < worldSize - 1)
 				{
-					std::cout  << x << ":" << y << " +x update\n";
 					ChunkMap[index].updateEdgeCases(&ChunkMap[index + 1]);
 				}
 				if(x > 0)
 				{
-					std::cout << x << ":" << y << " -x update\n";
 					ChunkMap[index].updateEdgeCases(&ChunkMap[index - 1]);
 				}
 
 				if (y < worldSize - 1)
 				{
-					std::cout << x << ":" << y << " +y update\n";
 					ChunkMap[index].updateEdgeCases(&ChunkMap[index + worldSize]);
 				}
 				if (y > 0)
 				{
-					std::cout << x << ":" << y << " -y update\n";
 					ChunkMap[index].updateEdgeCases(&ChunkMap[index - worldSize]);
 				}
 			}
