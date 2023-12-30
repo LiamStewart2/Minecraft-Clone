@@ -4,6 +4,8 @@
 #include "Shader.h"
 #include "BlockDatabase.h"
 
+#include <algorithm>
+
 #define CHUNK_WIDTH 16
 #define CHUNK_DEPTH 16
 #define CHUNK_HEIGHT 32

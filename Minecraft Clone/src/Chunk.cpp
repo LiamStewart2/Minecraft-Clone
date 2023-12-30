@@ -28,36 +28,25 @@ void Chunk::initChunk(int chunk_x, int chunk_y)
 	{
 		for (int z = 0; z < CHUNK_DEPTH; z++)
 		{
-			if(chunk_x == 1 && chunk_y == 2)
+			//int GrassHeight = CHUNK_HEIGHT / 2;
+			int GrassHeight = (CHUNK_HEIGHT / 2) + std::max(
+
+				(sin((((x + (chunk_x * CHUNK_WIDTH))) * CHUNK_WIDTH) * PI / 180)),
+				(sin((((z + (chunk_y * CHUNK_WIDTH))) * CHUNK_WIDTH) * PI / 180)))
+
+				* 10;
+			for (int y = 0; y < GrassHeight; y++)
 			{
-				for (int y = 0; y < CHUNK_HEIGHT; y++) {
+				int index = get1DIndex(x, y, z);
 
-					int index = get1DIndex(x, y, z);
-
-					chunkMap[index] = new Block(&bdata->bAir, glm::vec3(x + (chunk_x * CHUNK_WIDTH), y, z + (chunk_y * CHUNK_DEPTH)));
-				}
+				chunkMap[index] = new Block(&bdata->bCobblestone, glm::vec3(x + (chunk_x * CHUNK_WIDTH), y, z + (chunk_y * CHUNK_DEPTH)));
 			}
-			else {
-				//int GrassHeight = CHUNK_HEIGHT / 2;
-				int GrassHeight = (CHUNK_HEIGHT / 2) +
-					(sin((((x + (chunk_x * CHUNK_WIDTH))) * CHUNK_WIDTH) * PI / 180)) * 4;
-				if (x == 0 && z == 1)
-				{
-					GrassHeight = 2;
-				}
-				for (int y = 0; y < GrassHeight; y++)
-				{
-					int index = get1DIndex(x, y, z);
+			chunkMap[get1DIndex(x, GrassHeight, z)] = new Block(&bdata->bGrass, glm::vec3(x + (chunk_x * CHUNK_WIDTH), GrassHeight, z + (chunk_y * CHUNK_DEPTH)));
+			for (int y = GrassHeight + 1; y < CHUNK_HEIGHT; y++)
+			{
+				int index = get1DIndex(x, y, z);
 
-					chunkMap[index] = new Block(&bdata->bCobblestone, glm::vec3(x + (chunk_x * CHUNK_WIDTH), y, z + (chunk_y * CHUNK_DEPTH)));
-				}
-				chunkMap[get1DIndex(x, GrassHeight, z)] = new Block(&bdata->bGrass, glm::vec3(x + (chunk_x * CHUNK_WIDTH), GrassHeight, z + (chunk_y * CHUNK_DEPTH)));
-				for (int y = GrassHeight + 1; y < CHUNK_HEIGHT; y++)
-				{
-					int index = get1DIndex(x, y, z);
-
-					chunkMap[index] = new Block(&bdata->bAir, glm::vec3(x + (chunk_x * CHUNK_WIDTH), y, z + (chunk_y * CHUNK_DEPTH)));
-				}
+				chunkMap[index] = new Block(&bdata->bAir, glm::vec3(x + (chunk_x * CHUNK_WIDTH), y, z + (chunk_y * CHUNK_DEPTH)));
 			}
 		}
 	}
