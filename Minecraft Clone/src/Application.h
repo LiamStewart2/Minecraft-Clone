@@ -88,10 +88,13 @@ private:
 
     std::vector<Chunk> ChunkMap;
 
-    int worldSize = 4;
+    int worldSize = 3;
+    int renderDistance = 1;
 
     Camera camera;
 	Shader shader;
+
+    glm::vec2 playerChunkPosition;
 
     BlockDatabase blockData;
 
@@ -112,5 +115,9 @@ private:
 	void draw();
     void drawMap();
 	void terminate();
+
+    void updateChunks(const glm::vec2* lastChunkPosition);
+    void updatePlayerChunkPosition();
+    int returnIndexOfChunkByPosition(glm::vec2 position);
 };
 

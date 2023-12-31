@@ -18,6 +18,7 @@ public:
 	void drawChunk(Shader* shader);
 	void updateEdgeCases(Chunk* otherChunk);
 
+	glm::vec2 chunk_pos;
 
 	Block* getBlock(int x, int y, int z);
 private:

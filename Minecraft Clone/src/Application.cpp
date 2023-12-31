@@ -38,12 +38,19 @@ Application::Application()
 				std::cout << glGetString(GL_VERSION) << std::endl;
 
 				camera = Camera(glm::vec3(8.0f, 22.0f, 8.0f));
+				updatePlayerChunkPosition();
 
 				initTriangle();
 				initMap();
 			}
 		}
 	}
+}
+
+void Application::updatePlayerChunkPosition()
+{
+	playerChunkPosition.x = (int)floor(camera.Position.x / CHUNK_WIDTH);
+	playerChunkPosition.y = (int)floor(camera.Position.z / CHUNK_WIDTH);
 }
 
 Application::~Application()
@@ -61,10 +68,17 @@ void Application::mainloop()
 
 		if (currentFrame - previousTime >= 1.0f)
 		{
-			//std::cout << camera.Position.x / 16 << ":" << camera.Position.z / 16 << "\n";
+			std::cout << playerChunkPosition.x << ":" << playerChunkPosition.y << "\n";
 			std::cout << frameCount << std::endl;
 			frameCount = 0;
 			previousTime = currentFrame;
+		}
+
+		glm::vec2 lastChunkPosition = playerChunkPosition;
+		updatePlayerChunkPosition();
+		if (lastChunkPosition != playerChunkPosition)
+		{
+			updateChunks(&lastChunkPosition);
 		}
 
 		processInput(window);
@@ -75,6 +89,48 @@ void Application::mainloop()
 	}
 
 	terminate();
+}
+
+void Application::updateChunks(const glm::vec2* lastChunkPosition)
+{
+	//Load new chunks
+	if (lastChunkPosition->x < playerChunkPosition.x)
+	{
+		//moved increase x
+		for (int i = -renderDistance; i <= renderDistance; i++)
+		{
+			ChunkMap.push_back(Chunk(playerChunkPosition.x + renderDistance, playerChunkPosition.y + i, &blockData));
+			ChunkMap.erase(ChunkMap.begin() + returnIndexOfChunkByPosition(glm::vec2(lastChunkPosition->x - renderDistance, playerChunkPosition.y + i)));
+		}
+	}
+	else if (lastChunkPosition->x > playerChunkPosition.x)
+	{
+		//moved decrease x
+		for (int i = -renderDistance; i <= renderDistance; i++)
+		{
+			ChunkMap.push_back(Chunk(playerChunkPosition.x - renderDistance, playerChunkPosition.y + i, &blockData));
+			ChunkMap.erase(ChunkMap.begin() + returnIndexOfChunkByPosition(glm::vec2(lastChunkPosition->x + renderDistance, playerChunkPosition.y + i)));
+		}
+	}
+
+	if (lastChunkPosition->y < playerChunkPosition.y)
+	{
+		//move increased y
+		for (int i = -renderDistance; i <= renderDistance; i++)
+		{
+			ChunkMap.push_back(Chunk(playerChunkPosition.x + i, playerChunkPosition.y + renderDistance, &blockData));
+			ChunkMap.erase(ChunkMap.begin() + returnIndexOfChunkByPosition(glm::vec2(playerChunkPosition.x + i, lastChunkPosition->y - renderDistance)));
+		}
+	}
+	else if(lastChunkPosition->y > playerChunkPosition.y)
+	{
+		//moved decreased y
+		for (int i = -renderDistance; i <= renderDistance; i++)
+		{
+			ChunkMap.push_back(Chunk(playerChunkPosition.x + i, playerChunkPosition.y - renderDistance, &blockData));
+			ChunkMap.erase(ChunkMap.begin() + returnIndexOfChunkByPosition(glm::vec2(playerChunkPosition.x + i, lastChunkPosition->y + renderDistance)));
+		}
+	}
 }
 
 void Application::initTriangle()
@@ -108,16 +164,14 @@ void Application::initTriangle()
 
 void Application::initMap()
 {
-	for (int x = 0; x < worldSize; x++)
+	for (int x = -renderDistance; x <= renderDistance; x++)
 	{
-		for (int y = 0; y < worldSize; y++)
+		for (int y = -renderDistance; y <= renderDistance; y++)
 		{
 			ChunkMap.push_back(Chunk(x, y, &blockData));
 		}
 	}
-
-	std::cout << worldSize << ":" << ChunkMap.size() << '\n';
-	if (true)
+	if (false)
 	{
 		for (int y = 0; y < worldSize; y++)
 		{
@@ -145,6 +199,16 @@ void Application::initMap()
 			}
 		}
 	}
+}
+
+int Application::returnIndexOfChunkByPosition(glm::vec2 chunkPosition)
+{
+	for (int i = 0; i < ChunkMap.size(); i++)
+	{
+		if (chunkPosition == ChunkMap[i].chunk_pos)
+			return i;
+	}
+	return -1;
 }
 
 void Application::draw()

@@ -9,6 +9,7 @@ Chunk::Chunk(int x_pos, int y_pos, BlockDatabase* BlockData)
 {
 	bdata = BlockData;
 	initChunk(x_pos, y_pos);
+	chunk_pos = glm::vec2(x_pos, y_pos);
 }
 
 void Chunk::drawChunk(Shader* shader)
