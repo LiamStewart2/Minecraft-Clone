@@ -37,6 +37,8 @@ Application::Application()
 			{
 				std::cout << glGetString(GL_VERSION) << std::endl;
 
+				std::cout << sizeof(Block) << "\n";
+
 				camera = Camera(glm::vec3(8.0f, 22.0f, 8.0f));
 				updatePlayerChunkPosition();
 
@@ -99,8 +101,8 @@ void Application::updateChunks(const glm::vec2* lastChunkPosition)
 		//moved increase x
 		for (int i = -renderDistance; i <= renderDistance; i++)
 		{
-			ChunkMap.push_back(Chunk(playerChunkPosition.x + renderDistance, playerChunkPosition.y + i, &blockData));
 			ChunkMap.erase(ChunkMap.begin() + returnIndexOfChunkByPosition(glm::vec2(lastChunkPosition->x - renderDistance, playerChunkPosition.y + i)));
+			ChunkMap.push_back(Chunk(playerChunkPosition.x + renderDistance, playerChunkPosition.y + i, &blockData));
 		}
 	}
 	else if (lastChunkPosition->x > playerChunkPosition.x)
@@ -108,8 +110,8 @@ void Application::updateChunks(const glm::vec2* lastChunkPosition)
 		//moved decrease x
 		for (int i = -renderDistance; i <= renderDistance; i++)
 		{
-			ChunkMap.push_back(Chunk(playerChunkPosition.x - renderDistance, playerChunkPosition.y + i, &blockData));
 			ChunkMap.erase(ChunkMap.begin() + returnIndexOfChunkByPosition(glm::vec2(lastChunkPosition->x + renderDistance, playerChunkPosition.y + i)));
+			ChunkMap.push_back(Chunk(playerChunkPosition.x - renderDistance, playerChunkPosition.y + i, &blockData));
 		}
 	}
 
@@ -118,8 +120,8 @@ void Application::updateChunks(const glm::vec2* lastChunkPosition)
 		//move increased y
 		for (int i = -renderDistance; i <= renderDistance; i++)
 		{
-			ChunkMap.push_back(Chunk(playerChunkPosition.x + i, playerChunkPosition.y + renderDistance, &blockData));
 			ChunkMap.erase(ChunkMap.begin() + returnIndexOfChunkByPosition(glm::vec2(playerChunkPosition.x + i, lastChunkPosition->y - renderDistance)));
+			ChunkMap.push_back(Chunk(playerChunkPosition.x + i, playerChunkPosition.y + renderDistance, &blockData));
 		}
 	}
 	else if(lastChunkPosition->y > playerChunkPosition.y)
@@ -127,10 +129,11 @@ void Application::updateChunks(const glm::vec2* lastChunkPosition)
 		//moved decreased y
 		for (int i = -renderDistance; i <= renderDistance; i++)
 		{
-			ChunkMap.push_back(Chunk(playerChunkPosition.x + i, playerChunkPosition.y - renderDistance, &blockData));
 			ChunkMap.erase(ChunkMap.begin() + returnIndexOfChunkByPosition(glm::vec2(playerChunkPosition.x + i, lastChunkPosition->y + renderDistance)));
+			ChunkMap.push_back(Chunk(playerChunkPosition.x + i, playerChunkPosition.y - renderDistance, &blockData));
 		}
 	}
+	updateAllChunkEdgeCases();
 }
 
 void Application::initTriangle()
@@ -162,6 +165,42 @@ void Application::initTriangle()
 	blockData.initDatabase();
 }
 
+void Application::updateAllChunkEdgeCases()
+{
+	for (int x = -renderDistance; x <= renderDistance; x++)
+	{
+		for (int y = -renderDistance; y <= renderDistance; y++)
+		{
+			int xPosition = playerChunkPosition.x + x;
+			int yPosition = playerChunkPosition.y + y;
+
+			int index = returnIndexOfChunkByPosition(glm::vec2(xPosition, yPosition));
+
+			if (x != -renderDistance)
+			{
+				int negativeXindex = returnIndexOfChunkByPosition(glm::vec2(xPosition - 1, yPosition));
+				ChunkMap[index].updateEdgeCases(&ChunkMap[negativeXindex]);
+			}
+			if (x != renderDistance)
+			{
+				int positiveXindex = returnIndexOfChunkByPosition(glm::vec2(xPosition + 1, yPosition));
+				ChunkMap[index].updateEdgeCases(&ChunkMap[positiveXindex]);
+			}
+
+			if (y != -renderDistance)
+			{
+				int negativeYindex = returnIndexOfChunkByPosition(glm::vec2(xPosition, yPosition - 1));
+				ChunkMap[index].updateEdgeCases(&ChunkMap[negativeYindex]);
+			}
+			if (y != renderDistance)
+			{
+				int positiveYindex = returnIndexOfChunkByPosition(glm::vec2(xPosition, yPosition + 1));
+				ChunkMap[index].updateEdgeCases(&ChunkMap[positiveYindex]);
+			}
+		}
+	}
+}
+
 void Application::initMap()
 {
 	for (int x = -renderDistance; x <= renderDistance; x++)
@@ -171,33 +210,9 @@ void Application::initMap()
 			ChunkMap.push_back(Chunk(x, y, &blockData));
 		}
 	}
-	if (false)
+	if (true)
 	{
-		for (int y = 0; y < worldSize; y++)
-		{
-			for (int x = 0; x < worldSize; x++)
-			{
-				int index = x + (y * worldSize);
-
-				if (x < worldSize - 1)
-				{
-					ChunkMap[index].updateEdgeCases(&ChunkMap[index + 1]);
-				}
-				if(x > 0)
-				{
-					ChunkMap[index].updateEdgeCases(&ChunkMap[index - 1]);
-				}
-
-				if (y < worldSize - 1)
-				{
-					ChunkMap[index].updateEdgeCases(&ChunkMap[index + worldSize]);
-				}
-				if (y > 0)
-				{
-					ChunkMap[index].updateEdgeCases(&ChunkMap[index - worldSize]);
-				}
-			}
-		}
+		updateAllChunkEdgeCases();
 	}
 }
 

@@ -116,6 +116,7 @@ private:
     void drawMap();
 	void terminate();
 
+    void updateAllChunkEdgeCases();
     void updateChunks(const glm::vec2* lastChunkPosition);
     void updatePlayerChunkPosition();
     int returnIndexOfChunkByPosition(glm::vec2 position);

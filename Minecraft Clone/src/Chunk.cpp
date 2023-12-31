@@ -24,13 +24,13 @@ void Chunk::initChunk(int chunk_x, int chunk_y)
 	{
 		for (int z = 0; z < CHUNK_DEPTH; z++)
 		{
-			int GrassHeight = CHUNK_HEIGHT / 2;
-			/*int GrassHeight = (int)floor((CHUNK_HEIGHT / 2) +
+			//int GrassHeight = CHUNK_HEIGHT / 2;
+			int GrassHeight = (int)floor((CHUNK_HEIGHT / 2) +
 
 				(sin((((x + (chunk_x * CHUNK_WIDTH))) * CHUNK_WIDTH) * PI / 180)) *
 				(sin((((z + (chunk_y * CHUNK_WIDTH))) * CHUNK_WIDTH) * PI / 180))
 
-				* 10);*/
+				* 10);
 			for (int y = 0; y < GrassHeight; y++)
 			{
 				int index = get1DIndex(x, y, z);
