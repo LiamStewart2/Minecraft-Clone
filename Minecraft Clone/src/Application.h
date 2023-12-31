@@ -89,7 +89,7 @@ private:
     std::vector<Chunk> ChunkMap;
 
     int worldSize = 3;
-    int renderDistance = 1;
+    int renderDistance = 3;
 
     Camera camera;
 	Shader shader;

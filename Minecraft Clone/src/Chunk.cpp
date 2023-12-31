@@ -1,10 +1,5 @@
 #include "Chunk.h"
 
-Chunk::Chunk()
-{
-
-}
-
 Chunk::Chunk(int x_pos, int y_pos, BlockDatabase* BlockData)
 {
 	bdata = BlockData;

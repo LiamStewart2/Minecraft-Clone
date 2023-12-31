@@ -15,7 +15,7 @@ enum Face {
 class Block
 {
 public:
-	Block() { info = nullptr; model = glm::mat4(1.0f); }
+	Block() { info = nullptr; model = glm::mat4(1.0f); position = glm::vec3(0, 0, 0); }
 	Block(BlockType* blocksType, glm::vec3 Position);
 	~Block();
 

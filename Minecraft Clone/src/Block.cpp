@@ -29,6 +29,7 @@ void Block::checkIfAnyFacesVisible()
 
 Block::~Block()
 {
+	
 }
 
 void Block::draw(Shader* shader)
