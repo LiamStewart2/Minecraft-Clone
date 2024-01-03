@@ -29,7 +29,6 @@ void Chunk::initChunk(int chunk_x, int chunk_y)
 
 				(sin((((x + (chunk_x * CHUNK_WIDTH))) * CHUNK_WIDTH) * PI / 180)) *
 				(sin((((z + (chunk_y * CHUNK_WIDTH))) * CHUNK_WIDTH) * PI / 180))
-
 				* 10);
 			for (int y = 0; y < GrassHeight; y++)
 			{
