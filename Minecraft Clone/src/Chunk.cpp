@@ -2,7 +2,7 @@
 
 #define SEED 1015837287839
 
-// CODE FOR PERLIN NOISE // FROM WIKIPEDIA //
+// CODE FOR PERLIN NOISE // FROM CHATGPT //
 #include <iostream>
 #include <cmath>
 #include <algorithm>
@@ -66,7 +66,7 @@ private:
 
 	int permutation[512];
 };
-// END OF WIKIPEDIA CTRL C CTRL V
+// END OF CHATGPT CTRL C CTRL V
 
 
 Chunk::Chunk(int x_pos, int y_pos, BlockDatabase* BlockData)
