@@ -3,6 +3,7 @@
 #include "Block.h"
 #include "Shader.h"
 #include "BlockDatabase.h"
+#include "PerlinNoise.h"
 
 #include <algorithm>
 
@@ -15,7 +16,7 @@ class Chunk
 public:
 	Chunk() {}
 	~Chunk() {  }
-	Chunk(int x_pos, int y_pos, BlockDatabase* bdata);
+	Chunk(int x_pos, int y_pos, BlockDatabase* bdata, PerlinNoise* perlin);
 	void drawChunk(Shader* shader);
 	void updateEdgeCases(Chunk* otherChunk);
 
@@ -26,7 +27,7 @@ private:
 	Block* chunkMap[CHUNK_WIDTH * CHUNK_DEPTH * CHUNK_HEIGHT];
 	BlockDatabase* bdata;
 
-	void initChunk(int chunk_x, int chunk_y);
+	void initChunk(int chunk_x, int chunk_y, PerlinNoise* perlin);
 	int get1DIndex(int x, int y, int z) {return x + CHUNK_WIDTH * (z + CHUNK_DEPTH * y);
 	}
 };

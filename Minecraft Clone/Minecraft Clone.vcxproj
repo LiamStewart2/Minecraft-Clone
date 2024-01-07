@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\PerlinNoise.cpp" />
     <ClCompile Include="src\BlockDatabase.cpp" />
     <ClCompile Include="src\Chunk.cpp" />
     <ClCompile Include="src\BlockType.cpp" />
@@ -146,6 +147,7 @@
     <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\PerlinNoise.h" />
     <ClInclude Include="src\BlockDatabase.h" />
     <ClInclude Include="src\Chunk.h" />
     <ClInclude Include="src\BlockType.h" />

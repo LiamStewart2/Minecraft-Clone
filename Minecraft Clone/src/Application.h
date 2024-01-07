@@ -17,6 +17,7 @@
 #include "BlockType.h"
 #include "Chunk.h"
 #include "BlockDatabase.h"
+#include "PerlinNoise.h"
 
 class Application
 {
@@ -89,12 +90,14 @@ private:
     std::vector<Chunk> ChunkMap;
 
     int worldSize = 3;
-    int renderDistance = 4;
+    int renderDistance = 2;
 
     Camera camera;
 	Shader shader;
 
     glm::vec2 playerChunkPosition;
+
+    PerlinNoise Perlin;
 
     BlockDatabase blockData;
 
