@@ -14,7 +14,6 @@ void Chunk::drawChunk(Shader* shader)
 		if (chunkMap[i]->info->isAir == false && chunkMap[i]->anyFaces)
 			chunkMap[i]->draw(shader);
 	}
-	
 }
 
 void Chunk::initChunk(int chunk_x, int chunk_y, PerlinNoise* perlin)
