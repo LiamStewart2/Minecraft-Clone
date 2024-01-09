@@ -11,7 +11,7 @@ void Chunk::drawChunk(Shader* shader)
 {
 	for (int i = 0; i < CHUNK_WIDTH * CHUNK_DEPTH * CHUNK_HEIGHT; i++)
 	{
-		if (chunkMap[i]->info->isAir == false)
+		if (chunkMap[i]->info->isAir == false && chunkMap[i]->anyFaces)
 			chunkMap[i]->draw(shader);
 	}
 	
