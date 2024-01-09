@@ -19,8 +19,8 @@ void Chunk::drawChunk(Shader* shader)
 
 void Chunk::initChunk(int chunk_x, int chunk_y, PerlinNoise* perlin)
 {
-	int chunkStartX = chunk_x * CHUNK_WIDTH;
-	int chunkStartY = chunk_y * CHUNK_DEPTH;
+	int chunkStartX = (chunk_x + CHUNK_OFFSET) * CHUNK_WIDTH;
+	int chunkStartY = (chunk_y + CHUNK_OFFSET) * CHUNK_DEPTH;
 
 	for (int x = 0; x < CHUNK_WIDTH; x++)
 	{
