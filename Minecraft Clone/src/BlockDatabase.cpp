@@ -14,12 +14,14 @@ void BlockDatabase::initDatabase()
 	tGrassSide = Texture("res/images/blocks/grass_block_side.png");
 	tGrassTop = Texture("res/images/blocks/grass_block_top.png");
 	tCobblestone = Texture("res/images/blocks/cobblestone.png");
+	tOakLog = Texture("res/images/blocks/oak_log.png");
 
 	//Air
 	bAir = BlockType();
 	bAir.isAir = true;
-	//Grass
+
+
 	bGrass = BlockType(&tGrassSide, &tGrassTop, color(69, 255, 81), color(), color(156, 63, 37));
-	//Cobblestone
 	bCobblestone = BlockType(&tCobblestone);
+	bOakLog = BlockType(&tOakLog);
 }

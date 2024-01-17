@@ -101,6 +101,7 @@ void Chunk::addTrees(int chunk_x, int chunk_y)
 					if (getBlock(x, y, z)->info->isAir == false)
 					{
 						placeTree(x, y, z, chunk_x, chunk_y);
+						break;
 					}
 				}
 			}
@@ -109,10 +110,13 @@ void Chunk::addTrees(int chunk_x, int chunk_y)
 }
 void Chunk::placeTree(int x, int y, int z, int chunk_x, int chunk_y)
 {
-	int index = get1DIndex(x, y + 1, z);
+	for (int i = 1; i < 5; i++)
+	{
+		int index = get1DIndex(x, y + i, z);
 
-	delete(chunkMap[index]);
-	chunkMap[index] = new Block(&bdata->bCobblestone, glm::vec3(x + (chunk_x * CHUNK_WIDTH), y + 1, z + (chunk_y * CHUNK_DEPTH)));
+		delete(chunkMap[index]);
+		chunkMap[index] = new Block(&bdata->bOakLog, glm::vec3(x + (chunk_x * CHUNK_WIDTH), y + i, z + (chunk_y * CHUNK_DEPTH)));
+	}
 }
 
 

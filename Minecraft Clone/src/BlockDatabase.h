@@ -14,11 +14,13 @@ public:
     BlockType bGrass;
     BlockType bCobblestone;
     BlockType bAir;
+    BlockType bOakLog;
 
 
 private:
     Texture tGrassSide;
     Texture tGrassTop;
     Texture tCobblestone;
+    Texture tOakLog;
 };
 
