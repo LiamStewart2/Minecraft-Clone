@@ -43,7 +43,8 @@ Application::Application()
 				camera = Camera(glm::vec3(8.0f, 22.0f, 8.0f));
 				updatePlayerChunkPosition();
 
-				Perlin = PerlinNoise(SEED);
+				terrainHeight = PerlinNoise(SEED);
+				treeMap = PerlinNoise((int)(SEED / 2));
 
 				initTriangle();
 				initMap();
@@ -105,7 +106,7 @@ void Application::updateChunks(const glm::vec2* lastChunkPosition)
 		for (int i = -renderDistance; i <= renderDistance; i++)
 		{
 			ChunkMap.erase(ChunkMap.begin() + returnIndexOfChunkByPosition(glm::vec2(lastChunkPosition->x - renderDistance, playerChunkPosition.y + i)));
-			ChunkMap.push_back(Chunk(playerChunkPosition.x + renderDistance, playerChunkPosition.y + i, &blockData, &Perlin));
+			ChunkMap.push_back(Chunk(playerChunkPosition.x + renderDistance, playerChunkPosition.y + i, &blockData, &terrainHeight, &treeMap));
 		}
 	}
 	else if (lastChunkPosition->x > playerChunkPosition.x)
@@ -114,7 +115,7 @@ void Application::updateChunks(const glm::vec2* lastChunkPosition)
 		for (int i = -renderDistance; i <= renderDistance; i++)
 		{
 			ChunkMap.erase(ChunkMap.begin() + returnIndexOfChunkByPosition(glm::vec2(lastChunkPosition->x + renderDistance, playerChunkPosition.y + i)));
-			ChunkMap.push_back(Chunk(playerChunkPosition.x - renderDistance, playerChunkPosition.y + i, &blockData, &Perlin));
+			ChunkMap.push_back(Chunk(playerChunkPosition.x - renderDistance, playerChunkPosition.y + i, &blockData, &terrainHeight, &treeMap));
 		}
 	}
 
@@ -124,7 +125,7 @@ void Application::updateChunks(const glm::vec2* lastChunkPosition)
 		for (int i = -renderDistance; i <= renderDistance; i++)
 		{
 			ChunkMap.erase(ChunkMap.begin() + returnIndexOfChunkByPosition(glm::vec2(playerChunkPosition.x + i, lastChunkPosition->y - renderDistance)));
-			ChunkMap.push_back(Chunk(playerChunkPosition.x + i, playerChunkPosition.y + renderDistance, &blockData, &Perlin));
+			ChunkMap.push_back(Chunk(playerChunkPosition.x + i, playerChunkPosition.y + renderDistance, &blockData, &terrainHeight, &treeMap));
 		}
 	}
 	else if(lastChunkPosition->y > playerChunkPosition.y)
@@ -133,7 +134,7 @@ void Application::updateChunks(const glm::vec2* lastChunkPosition)
 		for (int i = -renderDistance; i <= renderDistance; i++)
 		{
 			ChunkMap.erase(ChunkMap.begin() + returnIndexOfChunkByPosition(glm::vec2(playerChunkPosition.x + i, lastChunkPosition->y + renderDistance)));
-			ChunkMap.push_back(Chunk(playerChunkPosition.x + i, playerChunkPosition.y - renderDistance, &blockData, &Perlin));
+			ChunkMap.push_back(Chunk(playerChunkPosition.x + i, playerChunkPosition.y - renderDistance, &blockData, &terrainHeight, &treeMap));
 		}
 	}
 	updateAllChunkEdgeCases();
@@ -210,7 +211,7 @@ void Application::initMap()
 	{
 		for (int y = -renderDistance; y <= renderDistance; y++)
 		{
-			ChunkMap.push_back(Chunk(x, y, &blockData, &Perlin));
+			ChunkMap.push_back(Chunk(x, y, &blockData, &terrainHeight, &treeMap));
 		}
 	}
 	if (true)

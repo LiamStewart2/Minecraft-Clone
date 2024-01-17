@@ -17,7 +17,7 @@ class Chunk
 public:
 	Chunk() {}
 	~Chunk() {  }
-	Chunk(int x_pos, int y_pos, BlockDatabase* bdata, PerlinNoise* perlin);
+	Chunk(int x_pos, int y_pos, BlockDatabase* bdata, PerlinNoise* terrainHeight, PerlinNoise* treeMap);
 	void drawChunk(Shader* shader);
 	void updateEdgeCases(Chunk* otherChunk);
 
@@ -28,7 +28,14 @@ private:
 	Block* chunkMap[CHUNK_WIDTH * CHUNK_DEPTH * CHUNK_HEIGHT];
 	BlockDatabase* bdata;
 
-	void initChunk(int chunk_x, int chunk_y, PerlinNoise* perlin);
+	void initChunk(int chunk_x, int chunk_y, PerlinNoise* terrainHeight);
+	void addTrees(int chunk_x, int chunk_y, PerlinNoise* treeMap);
+
+	// The position entered is the block just below the first block of the tree
+	void placeTree(int x, int y, int z, int chunk_x, int chunk_y);
+
+	void updateFaces();
+
 	int get1DIndex(int x, int y, int z) {return x + CHUNK_WIDTH * (z + CHUNK_DEPTH * y);
 	}
 };

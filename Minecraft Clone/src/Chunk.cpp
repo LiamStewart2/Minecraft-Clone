@@ -1,9 +1,11 @@
 #include "Chunk.h"
 
-Chunk::Chunk(int x_pos, int y_pos, BlockDatabase* BlockData, PerlinNoise* perlin)
+Chunk::Chunk(int x_pos, int y_pos, BlockDatabase* BlockData, PerlinNoise* terrainHeight, PerlinNoise* treeMap)
 {
 	bdata = BlockData;
-	initChunk(x_pos, y_pos, perlin);
+	initChunk(x_pos, y_pos, terrainHeight);
+	addTrees(x_pos, y_pos, treeMap);
+	updateFaces();
 	chunk_pos = glm::vec2(x_pos, y_pos);
 }
 
@@ -16,7 +18,7 @@ void Chunk::drawChunk(Shader* shader)
 	}
 }
 
-void Chunk::initChunk(int chunk_x, int chunk_y, PerlinNoise* perlin)
+void Chunk::initChunk(int chunk_x, int chunk_y, PerlinNoise* terrainHeight)
 {
 	int chunkStartX = (chunk_x + CHUNK_OFFSET) * CHUNK_WIDTH;
 	int chunkStartY = (chunk_y + CHUNK_OFFSET) * CHUNK_DEPTH;
@@ -25,7 +27,7 @@ void Chunk::initChunk(int chunk_x, int chunk_y, PerlinNoise* perlin)
 	{
 		for (int z = 0; z < CHUNK_DEPTH; z++)
 		{
-			double noiseValue = perlin->octaveNoise((chunkStartX + x) / 32.0, (chunkStartY + z) / 32.0, 3, 0.3);
+			double noiseValue = terrainHeight->octaveNoise((chunkStartX + x) / 32.0, (chunkStartY + z) / 32.0, 3, 0.3);
 			int GrassHeight = (CHUNK_HEIGHT / 2) + static_cast<int>(CHUNK_HEIGHT * noiseValue);
 			for (int y = 0; y < GrassHeight; y++)
 			{
@@ -42,7 +44,10 @@ void Chunk::initChunk(int chunk_x, int chunk_y, PerlinNoise* perlin)
 			}
 		}
 	}
+}
 
+void Chunk::updateFaces()
+{
 	for (int x = 0; x < CHUNK_WIDTH; x++)
 	{
 		for (int z = 0; z < CHUNK_DEPTH; z++)
@@ -79,6 +84,38 @@ void Chunk::initChunk(int chunk_x, int chunk_y, PerlinNoise* perlin)
 		}
 	}
 }
+
+void Chunk::addTrees(int chunk_x, int chunk_y, PerlinNoise* treeMap)
+{
+	int chunkStartX = (chunk_x + CHUNK_OFFSET) * CHUNK_WIDTH;
+	int chunkStartY = (chunk_y + CHUNK_OFFSET) * CHUNK_DEPTH;
+
+	for (int x = 0; x < CHUNK_WIDTH; x++)
+	{
+		for (int z = 0; z < CHUNK_DEPTH; z++)
+		{
+			double noiseValue = treeMap->octaveNoise((chunkStartX + x) / 16.0, (chunkStartY + z) / 16.0, 2, 0.3);
+			if (noiseValue == (double)0.0)
+			{
+				for (int y = CHUNK_HEIGHT - 1; y--; y < 1)
+				{
+					if (getBlock(x, y, z)->info->isAir == false)
+					{
+						placeTree(x, y, z, chunk_x, chunk_y);
+					}
+				}
+			}
+		}
+	}
+}
+void Chunk::placeTree(int x, int y, int z, int chunk_x, int chunk_y)
+{
+	int index = get1DIndex(x, y + 1, z);
+
+	delete(chunkMap[index]);
+	chunkMap[index] = new Block(&bdata->bCobblestone, glm::vec3(x + (chunk_x * CHUNK_WIDTH), y + 1, z + (chunk_y * CHUNK_DEPTH)));
+}
+
 
 Block* Chunk::getBlock(int x, int y, int z)
 {

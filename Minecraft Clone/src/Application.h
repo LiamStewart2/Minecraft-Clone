@@ -97,7 +97,8 @@ private:
 
     glm::vec2 playerChunkPosition;
 
-    PerlinNoise Perlin;
+    PerlinNoise terrainHeight;
+    PerlinNoise treeMap;
 
     BlockDatabase blockData;
 
