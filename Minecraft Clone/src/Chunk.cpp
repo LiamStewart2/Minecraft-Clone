@@ -1,10 +1,10 @@
 #include "Chunk.h"
 
-Chunk::Chunk(int x_pos, int y_pos, BlockDatabase* BlockData, PerlinNoise* terrainHeight, PerlinNoise* treeMap)
+Chunk::Chunk(int x_pos, int y_pos, BlockDatabase* BlockData, PerlinNoise* terrainHeight)
 {
 	bdata = BlockData;
 	initChunk(x_pos, y_pos, terrainHeight);
-	addTrees(x_pos, y_pos, treeMap);
+	addTrees(x_pos, y_pos);
 	updateFaces();
 	chunk_pos = glm::vec2(x_pos, y_pos);
 }
@@ -85,7 +85,7 @@ void Chunk::updateFaces()
 	}
 }
 
-void Chunk::addTrees(int chunk_x, int chunk_y, PerlinNoise* treeMap)
+void Chunk::addTrees(int chunk_x, int chunk_y)
 {
 	int chunkStartX = (chunk_x + CHUNK_OFFSET) * CHUNK_WIDTH;
 	int chunkStartY = (chunk_y + CHUNK_OFFSET) * CHUNK_DEPTH;
@@ -94,8 +94,7 @@ void Chunk::addTrees(int chunk_x, int chunk_y, PerlinNoise* treeMap)
 	{
 		for (int z = 0; z < CHUNK_DEPTH; z++)
 		{
-			double noiseValue = treeMap->octaveNoise((chunkStartX + x) / 16.0, (chunkStartY + z) / 16.0, 2, 0.3);
-			if (noiseValue == (double)0.0)
+			if (getRandomNumber(0, 50) == 50)
 			{
 				for (int y = CHUNK_HEIGHT - 1; y--; y < 1)
 				{
