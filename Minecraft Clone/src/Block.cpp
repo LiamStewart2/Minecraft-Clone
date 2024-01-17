@@ -42,6 +42,7 @@ void Block::draw(Shader* shader)
 			info->SideTexture->useTexture();
 			shader->setVec3("color", info->SideColor.r, info->SideColor.g, info->SideColor.b);
 
+
 			if (showFaces[BACK_SIDE])
 				glDrawArrays(GL_TRIANGLES, 6, 6);
 			if (showFaces[FRONT_SIDE])
@@ -69,6 +70,8 @@ void Block::draw(Shader* shader)
 				glDrawArrays(GL_TRIANGLES, 12, 6);
 			if (showFaces[RIGHT_SIDE])
 				glDrawArrays(GL_TRIANGLES, 18, 6);
+
+			//glDrawArrays(GL_TRIANGLES, 0, 24);
 
 			if(showFaces[BOTTOM_SIDE] || showFaces[TOP_SIDE])
 			{
