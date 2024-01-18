@@ -40,7 +40,7 @@ Application::Application()
 
 				std::cout << sizeof(Block) << "\n";
 
-				camera = Camera(glm::vec3(8.0f, CHUNK_HEIGHT / 2, 8.0f));
+				camera = Camera(glm::vec3(8.0f, CHUNK_HEIGHT / 2 + 10, 8.0f));
 				updatePlayerChunkPosition();
 
 				terrainHeight = PerlinNoise(SEED);
