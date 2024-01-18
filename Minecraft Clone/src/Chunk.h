@@ -9,8 +9,10 @@
 
 #define CHUNK_WIDTH 16
 #define CHUNK_DEPTH 16
-#define CHUNK_HEIGHT 32
+#define CHUNK_HEIGHT 64
 #define CHUNK_OFFSET 50
+
+#define MOUNTAIN_MULTIPLIER 10
 
 #include <random>
 
@@ -19,7 +21,7 @@ class Chunk
 public:
 	Chunk() {}
 	~Chunk() {}
-	Chunk(int x_pos, int y_pos, BlockDatabase* bdata, PerlinNoise* terrainHeight);
+	Chunk(int x_pos, int y_pos, BlockDatabase* bdata, PerlinNoise* terrainHeight, PerlinNoise* mountainMap);
 	void drawChunk(Shader* shader);
 	void updateEdgeCases(Chunk* otherChunk);
 	void cleanup();
@@ -31,7 +33,7 @@ private:
 	Block* chunkMap[CHUNK_WIDTH * CHUNK_DEPTH * CHUNK_HEIGHT];
 	BlockDatabase* bdata;
 
-	void initChunk(int chunk_x, int chunk_y, PerlinNoise* terrainHeight);
+	void initChunk(int chunk_x, int chunk_y, PerlinNoise* terrainHeight, PerlinNoise* mountainMap);
 	void addTrees(int chunk_x, int chunk_y);
 
 	// The position entered is the block just below the first block of the tree

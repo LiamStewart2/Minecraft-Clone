@@ -99,6 +99,7 @@ private:
 
     PerlinNoise terrainHeight;
     PerlinNoise treeMap;
+    PerlinNoise mountainMap;
 
     BlockDatabase blockData;
 

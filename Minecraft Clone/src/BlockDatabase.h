@@ -12,6 +12,7 @@ public:
     void initDatabase();
 
     BlockType bGrass;
+    BlockType bDirt;
     BlockType bCobblestone;
     BlockType bAir;
     BlockType bOakLog;
@@ -20,6 +21,7 @@ public:
 private:
     Texture tGrassSide;
     Texture tGrassTop;
+    Texture tDirt;
     Texture tCobblestone;
     Texture tOakLog;
 };

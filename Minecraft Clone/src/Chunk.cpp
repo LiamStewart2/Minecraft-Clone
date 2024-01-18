@@ -1,9 +1,9 @@
 #include "Chunk.h"
 
-Chunk::Chunk(int x_pos, int y_pos, BlockDatabase* BlockData, PerlinNoise* terrainHeight)
+Chunk::Chunk(int x_pos, int y_pos, BlockDatabase* BlockData, PerlinNoise* terrainHeight, PerlinNoise* mountainMap)
 {
 	bdata = BlockData;
-	initChunk(x_pos, y_pos, terrainHeight);
+	initChunk(x_pos, y_pos, terrainHeight, mountainMap);
 	addTrees(x_pos, y_pos);
 	updateFaces();
 	chunk_pos = glm::vec2(x_pos, y_pos);
@@ -27,7 +27,7 @@ void Chunk::drawChunk(Shader* shader)
 	}
 }
 
-void Chunk::initChunk(int chunk_x, int chunk_y, PerlinNoise* terrainHeight)
+void Chunk::initChunk(int chunk_x, int chunk_y, PerlinNoise* terrainHeight, PerlinNoise* mountainMap)
 {
 	int chunkStartX = (chunk_x + CHUNK_OFFSET) * CHUNK_WIDTH;
 	int chunkStartY = (chunk_y + CHUNK_OFFSET) * CHUNK_DEPTH;
@@ -36,14 +36,28 @@ void Chunk::initChunk(int chunk_x, int chunk_y, PerlinNoise* terrainHeight)
 	{
 		for (int z = 0; z < CHUNK_DEPTH; z++)
 		{
-			double noiseValue = terrainHeight->octaveNoise((chunkStartX + x) / 32.0, (chunkStartY + z) / 32.0, 3, 0.3);
-			int GrassHeight = (CHUNK_HEIGHT / 2) + static_cast<int>(CHUNK_HEIGHT * noiseValue);
-			for (int y = 0; y < GrassHeight; y++)
+
+			double heightValue = terrainHeight->octaveNoise((chunkStartX + x) / 32.0, (chunkStartY + z) / 32.0, 3, 0.3);
+			double mountainValue = mountainMap->octaveNoise((chunkStartX + x) / 128.0, (chunkStartY + z) / 128.0, 4, 0.55);
+			double extremeMountainValue = mountainMap->octaveNoise((chunkStartX + x) / 256.0, (chunkStartY + z) / 256.0, 3, 0.45);
+
+			int GrassHeight = (CHUNK_HEIGHT / 2) + static_cast<int>((CHUNK_HEIGHT * heightValue * 0.5) * (mountainValue * MOUNTAIN_MULTIPLIER) * (extremeMountainValue * MOUNTAIN_MULTIPLIER / 2));
+
+
+			for (int y = 0; y < GrassHeight - 3; y++)
 			{
 				int index = get1DIndex(x, y, z);
 
 				chunkMap[index] = new Block(&bdata->bCobblestone, glm::vec3(x + (chunk_x * CHUNK_WIDTH), y, z + (chunk_y * CHUNK_DEPTH)));
 			}
+
+			for (int y = GrassHeight - 3; y < GrassHeight; y++)
+			{
+				int index = get1DIndex(x, y, z);		
+
+				chunkMap[index] = new Block(&bdata->bDirt, glm::vec3(x + (chunk_x * CHUNK_WIDTH), y, z + (chunk_y * CHUNK_DEPTH)));
+			}
+
 			chunkMap[get1DIndex(x, GrassHeight, z)] = new Block(&bdata->bGrass, glm::vec3(x + (chunk_x * CHUNK_WIDTH), GrassHeight, z + (chunk_y * CHUNK_DEPTH)));
 			for (int y = GrassHeight + 1; y < CHUNK_HEIGHT; y++)
 			{
