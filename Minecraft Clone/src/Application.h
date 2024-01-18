@@ -34,7 +34,7 @@ public:
 private:
 	GLFWwindow* window;
 
-	int windowWidth = 1000; int windowHeight = 1000;
+	int windowWidth = 900; int windowHeight = 900;
 
     //Cube vertices
     float vertices[180] = {
