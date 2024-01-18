@@ -18,10 +18,11 @@ class Chunk
 {
 public:
 	Chunk() {}
-	~Chunk() {  }
+	~Chunk() {}
 	Chunk(int x_pos, int y_pos, BlockDatabase* bdata, PerlinNoise* terrainHeight);
 	void drawChunk(Shader* shader);
 	void updateEdgeCases(Chunk* otherChunk);
+	void cleanup();
 
 	glm::vec2 chunk_pos;
 

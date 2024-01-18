@@ -105,7 +105,9 @@ void Application::updateChunks(const glm::vec2* lastChunkPosition)
 		//moved increase x
 		for (int i = -renderDistance; i <= renderDistance; i++)
 		{
-			ChunkMap.erase(ChunkMap.begin() + returnIndexOfChunkByPosition(glm::vec2(lastChunkPosition->x - renderDistance, playerChunkPosition.y + i)));
+			int index = returnIndexOfChunkByPosition(glm::vec2(lastChunkPosition->x - renderDistance, playerChunkPosition.y + i));
+			ChunkMap[index].cleanup();
+			ChunkMap.erase(ChunkMap.begin() + index);
 			ChunkMap.push_back(Chunk(playerChunkPosition.x + renderDistance, playerChunkPosition.y + i, &blockData, &terrainHeight));
 		}
 	}
@@ -114,7 +116,9 @@ void Application::updateChunks(const glm::vec2* lastChunkPosition)
 		//moved decrease x
 		for (int i = -renderDistance; i <= renderDistance; i++)
 		{
-			ChunkMap.erase(ChunkMap.begin() + returnIndexOfChunkByPosition(glm::vec2(lastChunkPosition->x + renderDistance, playerChunkPosition.y + i)));
+			int index = returnIndexOfChunkByPosition(glm::vec2(lastChunkPosition->x + renderDistance, playerChunkPosition.y + i));
+			ChunkMap[index].cleanup();
+			ChunkMap.erase(ChunkMap.begin() + index);
 			ChunkMap.push_back(Chunk(playerChunkPosition.x - renderDistance, playerChunkPosition.y + i, &blockData, &terrainHeight));
 		}
 	}
@@ -124,7 +128,9 @@ void Application::updateChunks(const glm::vec2* lastChunkPosition)
 		//move increased y
 		for (int i = -renderDistance; i <= renderDistance; i++)
 		{
-			ChunkMap.erase(ChunkMap.begin() + returnIndexOfChunkByPosition(glm::vec2(playerChunkPosition.x + i, lastChunkPosition->y - renderDistance)));
+			int index = returnIndexOfChunkByPosition(glm::vec2(playerChunkPosition.x + i, lastChunkPosition->y - renderDistance));
+			ChunkMap[index].cleanup();
+			ChunkMap.erase(ChunkMap.begin() + index);
 			ChunkMap.push_back(Chunk(playerChunkPosition.x + i, playerChunkPosition.y + renderDistance, &blockData, &terrainHeight));
 		}
 	}
@@ -133,7 +139,9 @@ void Application::updateChunks(const glm::vec2* lastChunkPosition)
 		//moved decreased y
 		for (int i = -renderDistance; i <= renderDistance; i++)
 		{
-			ChunkMap.erase(ChunkMap.begin() + returnIndexOfChunkByPosition(glm::vec2(playerChunkPosition.x + i, lastChunkPosition->y + renderDistance)));
+			int index = returnIndexOfChunkByPosition(glm::vec2(playerChunkPosition.x + i, lastChunkPosition->y + renderDistance));
+			ChunkMap[index].cleanup();
+			ChunkMap.erase(ChunkMap.begin() + index);
 			ChunkMap.push_back(Chunk(playerChunkPosition.x + i, playerChunkPosition.y - renderDistance, &blockData, &terrainHeight));
 		}
 	}

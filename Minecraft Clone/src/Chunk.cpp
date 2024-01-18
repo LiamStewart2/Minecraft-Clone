@@ -9,6 +9,15 @@ Chunk::Chunk(int x_pos, int y_pos, BlockDatabase* BlockData, PerlinNoise* terrai
 	chunk_pos = glm::vec2(x_pos, y_pos);
 }
 
+void Chunk::cleanup()
+{
+	for (int i = 0; i < CHUNK_WIDTH * CHUNK_DEPTH * CHUNK_HEIGHT; i++)
+	{
+		if(chunkMap[i])
+			delete chunkMap[i];
+	}
+}
+
 void Chunk::drawChunk(Shader* shader)
 {
 	for (int i = 0; i < CHUNK_WIDTH * CHUNK_DEPTH * CHUNK_HEIGHT; i++)
