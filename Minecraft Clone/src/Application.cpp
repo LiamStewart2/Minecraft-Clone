@@ -2,7 +2,7 @@
 
 
 
-#define SEED 532789573298
+#define SEED 56483765842
 
 void Application::setFunctions(GLFWcursorposfun cursorFunction)
 {
@@ -75,8 +75,8 @@ void Application::mainloop()
 
 		if (currentFrame - previousTime >= 1.0f)
 		{
-			std::cout << playerChunkPosition.x << ":" << playerChunkPosition.y << "\n";
-			std::cout << frameCount << std::endl;
+			//std::cout << playerChunkPosition.x << ":" << playerChunkPosition.y << "\n";
+			//std::cout << frameCount << std::endl;
 			frameCount = 0;
 			previousTime = currentFrame;
 		}
