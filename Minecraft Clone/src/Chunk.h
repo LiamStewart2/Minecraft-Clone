@@ -6,6 +6,7 @@
 #include "PerlinNoise.h"
 
 #include <algorithm>
+#include <vector>
 
 #define CHUNK_WIDTH 16
 #define CHUNK_DEPTH 16
@@ -32,6 +33,9 @@ public:
 private:
 	Block* chunkMap[CHUNK_WIDTH * CHUNK_DEPTH * CHUNK_HEIGHT];
 	BlockDatabase* bdata;
+	
+	std::vector<float> vertices;
+
 	glm::vec3 leaves[18] = {
 		glm::vec3(-1, 0, 0), glm::vec3(1, 0, 0),
 		glm::vec3(0, 0, -1), glm::vec3(0, 0, 1), glm::vec3(-2, 0, 0),
