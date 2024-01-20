@@ -168,6 +168,16 @@ Block* Chunk::getBlock(int x, int y, int z)
 	return chunkMap[get1DIndex(x, y, z)];
 }
 
+glm::vec3 Chunk::getMin() const
+{
+	return glm::vec3(chunk_pos.x * CHUNK_WIDTH, 0, chunk_pos.y * CHUNK_DEPTH);
+}
+
+glm::vec3 Chunk::getMax() const
+{
+	return glm::vec3(chunk_pos.x * CHUNK_WIDTH + CHUNK_WIDTH - 1, CHUNK_HEIGHT, chunk_pos.y * CHUNK_DEPTH + CHUNK_DEPTH - 1);
+}
+
 void Chunk::updateEdgeCases(Chunk* otherChunk)
 {
 	//CHECK Z AXIS // INCREASE IN X AXIS

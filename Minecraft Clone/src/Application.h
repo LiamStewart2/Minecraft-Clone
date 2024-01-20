@@ -9,6 +9,8 @@
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
+#include <gtx/intersect.hpp>
+#include <gtx/string_cast.hpp>
 
 #include "Shader.h"
 #include "Block.h"

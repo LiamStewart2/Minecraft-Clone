@@ -30,6 +30,10 @@ public:
 	glm::vec2 chunk_pos;
 
 	Block* getBlock(int x, int y, int z);
+
+	glm::vec3 getMin() const;
+	glm::vec3 getMax() const;
+
 private:
 	Block* chunkMap[CHUNK_WIDTH * CHUNK_DEPTH * CHUNK_HEIGHT];
 	BlockDatabase* bdata;

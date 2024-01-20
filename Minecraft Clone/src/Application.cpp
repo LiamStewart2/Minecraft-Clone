@@ -1,5 +1,7 @@
 #include "Application.h"
 
+
+
 #define SEED 532789573298
 
 void Application::setFunctions(GLFWcursorposfun cursorFunction)
