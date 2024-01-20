@@ -34,7 +34,7 @@ public:
 private:
 	GLFWwindow* window;
 
-	int windowWidth = 1000; int windowHeight = 1000;
+	int windowWidth = 900; int windowHeight = 900;
 
     //Cube vertices
     float vertices[180] = {
@@ -97,7 +97,9 @@ private:
 
     glm::vec2 playerChunkPosition;
 
-    PerlinNoise Perlin;
+    PerlinNoise terrainHeight;
+    PerlinNoise treeMap;
+    PerlinNoise mountainMap;
 
     BlockDatabase blockData;
 

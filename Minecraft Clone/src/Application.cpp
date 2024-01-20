@@ -1,6 +1,6 @@
 #include "Application.h"
 
-#define SEED 1015837287839
+#define SEED 532789573298
 
 void Application::setFunctions(GLFWcursorposfun cursorFunction)
 {
@@ -13,7 +13,7 @@ Application::Application()
 	{
 		std::cout << "GLFW INIT FAILED" << std::endl;
 	}
-	else 
+	else
 	{
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
@@ -38,12 +38,12 @@ Application::Application()
 			{
 				std::cout << glGetString(GL_VERSION) << std::endl;
 
-				std::cout << sizeof(Block) << "\n";
-
-				camera = Camera(glm::vec3(8.0f, 22.0f, 8.0f));
+				camera = Camera(glm::vec3(8.0f, CHUNK_HEIGHT / 2 + 10, 8.0f));
 				updatePlayerChunkPosition();
 
-				Perlin = PerlinNoise(SEED);
+				terrainHeight = PerlinNoise(SEED);
+				treeMap = PerlinNoise(SEED);
+				mountainMap = PerlinNoise(SEED);
 
 				initTriangle();
 				initMap();
@@ -104,8 +104,10 @@ void Application::updateChunks(const glm::vec2* lastChunkPosition)
 		//moved increase x
 		for (int i = -renderDistance; i <= renderDistance; i++)
 		{
-			ChunkMap.erase(ChunkMap.begin() + returnIndexOfChunkByPosition(glm::vec2(lastChunkPosition->x - renderDistance, playerChunkPosition.y + i)));
-			ChunkMap.push_back(Chunk(playerChunkPosition.x + renderDistance, playerChunkPosition.y + i, &blockData, &Perlin));
+			int index = returnIndexOfChunkByPosition(glm::vec2(lastChunkPosition->x - renderDistance, playerChunkPosition.y + i));
+			ChunkMap[index].cleanup();
+			ChunkMap.erase(ChunkMap.begin() + index);
+			ChunkMap.push_back(Chunk(playerChunkPosition.x + renderDistance, playerChunkPosition.y + i, &blockData, &terrainHeight, &mountainMap));
 		}
 	}
 	else if (lastChunkPosition->x > playerChunkPosition.x)
@@ -113,8 +115,10 @@ void Application::updateChunks(const glm::vec2* lastChunkPosition)
 		//moved decrease x
 		for (int i = -renderDistance; i <= renderDistance; i++)
 		{
-			ChunkMap.erase(ChunkMap.begin() + returnIndexOfChunkByPosition(glm::vec2(lastChunkPosition->x + renderDistance, playerChunkPosition.y + i)));
-			ChunkMap.push_back(Chunk(playerChunkPosition.x - renderDistance, playerChunkPosition.y + i, &blockData, &Perlin));
+			int index = returnIndexOfChunkByPosition(glm::vec2(lastChunkPosition->x + renderDistance, playerChunkPosition.y + i));
+			ChunkMap[index].cleanup();
+			ChunkMap.erase(ChunkMap.begin() + index);
+			ChunkMap.push_back(Chunk(playerChunkPosition.x - renderDistance, playerChunkPosition.y + i, &blockData, &terrainHeight, &mountainMap));
 		}
 	}
 
@@ -123,8 +127,10 @@ void Application::updateChunks(const glm::vec2* lastChunkPosition)
 		//move increased y
 		for (int i = -renderDistance; i <= renderDistance; i++)
 		{
-			ChunkMap.erase(ChunkMap.begin() + returnIndexOfChunkByPosition(glm::vec2(playerChunkPosition.x + i, lastChunkPosition->y - renderDistance)));
-			ChunkMap.push_back(Chunk(playerChunkPosition.x + i, playerChunkPosition.y + renderDistance, &blockData, &Perlin));
+			int index = returnIndexOfChunkByPosition(glm::vec2(playerChunkPosition.x + i, lastChunkPosition->y - renderDistance));
+			ChunkMap[index].cleanup();
+			ChunkMap.erase(ChunkMap.begin() + index);
+			ChunkMap.push_back(Chunk(playerChunkPosition.x + i, playerChunkPosition.y + renderDistance, &blockData, &terrainHeight, &mountainMap));
 		}
 	}
 	else if(lastChunkPosition->y > playerChunkPosition.y)
@@ -132,8 +138,10 @@ void Application::updateChunks(const glm::vec2* lastChunkPosition)
 		//moved decreased y
 		for (int i = -renderDistance; i <= renderDistance; i++)
 		{
-			ChunkMap.erase(ChunkMap.begin() + returnIndexOfChunkByPosition(glm::vec2(playerChunkPosition.x + i, lastChunkPosition->y + renderDistance)));
-			ChunkMap.push_back(Chunk(playerChunkPosition.x + i, playerChunkPosition.y - renderDistance, &blockData, &Perlin));
+			int index = returnIndexOfChunkByPosition(glm::vec2(playerChunkPosition.x + i, lastChunkPosition->y + renderDistance));
+			ChunkMap[index].cleanup();
+			ChunkMap.erase(ChunkMap.begin() + index);
+			ChunkMap.push_back(Chunk(playerChunkPosition.x + i, playerChunkPosition.y - renderDistance, &blockData, &terrainHeight, &mountainMap));
 		}
 	}
 	updateAllChunkEdgeCases();
@@ -162,6 +170,12 @@ void Application::initTriangle()
 	glBindVertexArray(0);
 
 	glEnable(GL_DEPTH_TEST);
+	
+	//This Fuckery is for later
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
+	//glFrontFace(GL_CW);
+
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	blockData = BlockDatabase();
@@ -210,7 +224,7 @@ void Application::initMap()
 	{
 		for (int y = -renderDistance; y <= renderDistance; y++)
 		{
-			ChunkMap.push_back(Chunk(x, y, &blockData, &Perlin));
+			ChunkMap.push_back(Chunk(x, y, &blockData, &terrainHeight, &mountainMap));
 		}
 	}
 	if (true)
