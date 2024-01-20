@@ -16,7 +16,7 @@ public:
     BlockType bCobblestone;
     BlockType bAir;
     BlockType bOakLog;
-
+    BlockType bCherryLeaves;
 
 private:
     Texture tGrassSide;
@@ -24,5 +24,6 @@ private:
     Texture tDirt;
     Texture tCobblestone;
     Texture tOakLog;
+    Texture tCherryLeaves;
 };
 

@@ -119,9 +119,10 @@ void Chunk::addTrees(int chunk_x, int chunk_y)
 		{
 			if (getRandomNumber(0, 50) == 50)
 			{
-				for (int y = CHUNK_HEIGHT - 1; y--; y < 1)
+				for (int y = CHUNK_HEIGHT - 8; y--; y < 1)
 				{
-					if (getBlock(x, y, z)->info->isAir == false)
+					Block* theBlock = getBlock(x, y, z);
+					if (theBlock->info->canSpawnTree == true)
 					{
 						placeTree(x, y, z, chunk_x, chunk_y);
 						break;
@@ -133,12 +134,27 @@ void Chunk::addTrees(int chunk_x, int chunk_y)
 }
 void Chunk::placeTree(int x, int y, int z, int chunk_x, int chunk_y)
 {
+	//Place Trunk
 	for (int i = 1; i < 5; i++)
 	{
 		int index = get1DIndex(x, y + i, z);
+		if(chunkMap[index])
+			delete chunkMap[index];
 
-		delete(chunkMap[index]);
 		chunkMap[index] = new Block(&bdata->bOakLog, glm::vec3(x + (chunk_x * CHUNK_WIDTH), y + i, z + (chunk_y * CHUNK_DEPTH)));
+	}
+
+	//Places Leaves
+	for (int i = 0; i < 19; i++)
+	{
+		glm::vec3 position = glm::vec3(x, y + 4, z) + leaves[i];
+		if (position.x >= 0 && position.x < CHUNK_WIDTH && position.z >= 0 && position.z < CHUNK_DEPTH && position.y < CHUNK_HEIGHT)
+		{
+			int index = get1DIndex(position.x, position.y, position.z);
+
+			delete chunkMap[index];
+			chunkMap[index] = new Block(&bdata->bCherryLeaves, glm::vec3(position.x + (chunk_x * CHUNK_WIDTH), position.y, position.z + (chunk_y * CHUNK_DEPTH)));
+		}
 	}
 }
 

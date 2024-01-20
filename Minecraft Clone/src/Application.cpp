@@ -13,7 +13,7 @@ Application::Application()
 	{
 		std::cout << "GLFW INIT FAILED" << std::endl;
 	}
-	else 
+	else
 	{
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
@@ -37,8 +37,6 @@ Application::Application()
 			else
 			{
 				std::cout << glGetString(GL_VERSION) << std::endl;
-
-				std::cout << sizeof(Block) << "\n";
 
 				camera = Camera(glm::vec3(8.0f, CHUNK_HEIGHT / 2 + 10, 8.0f));
 				updatePlayerChunkPosition();

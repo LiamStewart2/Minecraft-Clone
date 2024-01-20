@@ -32,6 +32,18 @@ public:
 private:
 	Block* chunkMap[CHUNK_WIDTH * CHUNK_DEPTH * CHUNK_HEIGHT];
 	BlockDatabase* bdata;
+	glm::vec3 leaves[19] = {
+		glm::vec3(-1, 0, 0), glm::vec3(1, 0, 0),
+		glm::vec3(0, 0, -1), glm::vec3(0, 0, 1), glm::vec3(-2, 0, 0),
+		glm::vec3(2, 0, 0), glm::vec3(-1, 0, -1), glm::vec3(1, 0, 1),
+		glm::vec3(-1, 0, 1), glm::vec3(1, 0, -1), glm::vec3(0, 0, -2),
+		glm::vec3(0, 0, 2),
+
+		glm::vec3(0, 1, 0), glm::vec3(-1, 1, 0), glm::vec3(1, 1, 0),
+		glm::vec3(0, 1, -1), glm::vec3(0, 1, 1),
+
+		glm::vec3(0, 2, 0)
+	};
 
 	void initChunk(int chunk_x, int chunk_y, PerlinNoise* terrainHeight, PerlinNoise* mountainMap);
 	void addTrees(int chunk_x, int chunk_y);
