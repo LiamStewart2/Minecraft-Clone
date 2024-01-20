@@ -113,11 +113,11 @@ void Chunk::addTrees(int chunk_x, int chunk_y)
 	int chunkStartX = (chunk_x + CHUNK_OFFSET) * CHUNK_WIDTH;
 	int chunkStartY = (chunk_y + CHUNK_OFFSET) * CHUNK_DEPTH;
 
-	for (int x = 0; x < CHUNK_WIDTH; x++)
+	for (int x = 2; x < CHUNK_WIDTH - 2; x++)
 	{
-		for (int z = 0; z < CHUNK_DEPTH; z++)
+		for (int z = 2; z < CHUNK_DEPTH - 2; z++)
 		{
-			if (getRandomNumber(0, 50) == 50)
+			if (getRandomNumber(0, 100) >= 94)
 			{
 				for (int y = CHUNK_HEIGHT - 8; y--; y < 1)
 				{
