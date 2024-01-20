@@ -134,6 +134,10 @@ void Chunk::addTrees(int chunk_x, int chunk_y)
 }
 void Chunk::placeTree(int x, int y, int z, int chunk_x, int chunk_y)
 {
+	int index = get1DIndex(x, y, z);
+	delete chunkMap[index];
+	chunkMap[index] = new Block(&bdata->bDirt, glm::vec3(x + (chunk_x * CHUNK_WIDTH), y, z + (chunk_y * CHUNK_DEPTH)));
+
 	//Place Trunk
 	for (int i = 1; i < 5; i++)
 	{
@@ -145,7 +149,7 @@ void Chunk::placeTree(int x, int y, int z, int chunk_x, int chunk_y)
 	}
 
 	//Places Leaves
-	for (int i = 0; i < 19; i++)
+	for (int i = 0; i < 18; i++)
 	{
 		glm::vec3 position = glm::vec3(x, y + 4, z) + leaves[i];
 		if (position.x >= 0 && position.x < CHUNK_WIDTH && position.z >= 0 && position.z < CHUNK_DEPTH && position.y < CHUNK_HEIGHT)
